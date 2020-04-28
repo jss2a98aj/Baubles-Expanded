@@ -46,14 +46,6 @@ public class Baubles {
 		event.getModMetadata().version = Baubles.VERSION;
 		modDir = event.getModConfigurationDirectory();		
 		
-		try {
-			Config.initialize(event.getSuggestedConfigurationFile());
-		} catch (Exception e) {
-			Baubles.log.error("BAUBLES has a problem loading it's configuration");
-		} finally {
-			if (Config.config!=null) Config.save();
-		}
-		
 		PacketHandler.init();
 		
 		entityEventHandler = new EventHandlerEntity();
@@ -63,22 +55,12 @@ public class Baubles {
 		FMLCommonHandler.instance().bus().register(entityEventNetwork);
 		proxy.registerHandlers();
 		
-		/////////////////////
-			
-		Config.save();
-		
 	}
 
 	@EventHandler
 	public void init(FMLInitializationEvent evt) {
 		NetworkRegistry.INSTANCE.registerGuiHandler(instance, proxy);
   		proxy.registerKeyBindings();
-	}
-
-	@EventHandler
-	public void postInit(FMLPostInitializationEvent evt) {
-		Config.initRecipe();
-		
 	}
 		
 }
