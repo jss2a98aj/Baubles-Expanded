@@ -25,7 +25,7 @@ public class InventoryBaubles implements IInventory {
 	public boolean blockEvents=false;
 
 	public InventoryBaubles(EntityPlayer player) {
-		this.stackList = new ItemStack[4];
+		this.stackList = new ItemStack[8];
 		this.player = new WeakReference<EntityPlayer>(player);
 	}
 

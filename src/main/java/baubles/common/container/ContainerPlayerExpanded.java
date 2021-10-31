@@ -39,7 +39,7 @@ public class ContainerPlayerExpanded extends Container
         	baubles.stackList = PlayerHandler.getPlayerBaubles(player).stackList;
         }
         
-        this.addSlotToContainer(new SlotCrafting(playerInv.player, this.craftMatrix, this.craftResult, 0, 144, 36));
+        this.addSlotToContainer(new SlotCrafting(playerInv.player, this.craftMatrix, this.craftResult, 0, 144, 27));//36 -> 27
         int i;
         int j;
 
@@ -47,7 +47,7 @@ public class ContainerPlayerExpanded extends Container
         {
             for (j = 0; j < 2; ++j)
             {
-                this.addSlotToContainer(new Slot(this.craftMatrix, j + i * 2, 106 + j * 18, 26 + i * 18));
+                this.addSlotToContainer(new Slot(this.craftMatrix, j + i * 2, 106 + j * 18, 17 + i * 18));//26 -> 17
             }
         }
 
@@ -67,10 +67,14 @@ public class ContainerPlayerExpanded extends Container
             });
         }
         
-        this.addSlotToContainer(new SlotBauble(baubles,BaubleType.AMULET,0,80,8 + 0 * 18));
-        this.addSlotToContainer(new SlotBauble(baubles,BaubleType.RING,1,80,8 + 1 * 18));
-        this.addSlotToContainer(new SlotBauble(baubles,BaubleType.RING,2,80,8 + 2 * 18));
-        this.addSlotToContainer(new SlotBauble(baubles,BaubleType.BELT,3,80,8 + 3 * 18));
+        this.addSlotToContainer(new SlotBauble(baubles,BaubleType.AMULET, 0, 80, 8));
+        this.addSlotToContainer(new SlotBauble(baubles,BaubleType.RING,1, 80, 8 + 18));
+        this.addSlotToContainer(new SlotBauble(baubles,BaubleType.RING,2, 80, 8 + 2 * 18));
+        this.addSlotToContainer(new SlotBauble(baubles,BaubleType.BELT,3, 80, 8 + 3 * 18));
+        this.addSlotToContainer(new SlotBauble(baubles,BaubleType.HEAD,4, 80 + 18, 8 + 3 * 18));
+        this.addSlotToContainer(new SlotBauble(baubles,BaubleType.BODY,5, 80 + 18 * 2, 8 + 3 * 18));
+        this.addSlotToContainer(new SlotBauble(baubles,BaubleType.CHARM,6, 80 + 18 * 3, 8 + 3 * 18));
+        this.addSlotToContainer(new SlotBauble(baubles,BaubleType.GAUNTLET,7, 80 + 18 * 4, 8 + 3 * 18));
 
         for (i = 0; i < 3; ++i)
         {
@@ -213,6 +217,50 @@ public class ContainerPlayerExpanded extends Container
             		!((Slot)this.inventorySlots.get(12)).getHasStack())
             {
                 int j = 12;
+                if (!this.mergeItemStack(itemstack1, j, j + 1, false))
+                {
+                    return null;
+                }
+            }
+            else if (itemstack.getItem() instanceof IBauble && 
+            		((IBauble)itemstack.getItem()).getBaubleType(itemstack)==BaubleType.HEAD &&
+    				((IBauble)itemstack.getItem()).canEquip(itemstack, thePlayer) &&
+            		!((Slot)this.inventorySlots.get(13)).getHasStack())
+            {
+                int j = 13;
+                if (!this.mergeItemStack(itemstack1, j, j + 1, false))
+                {
+                    return null;
+                }
+            }
+            else if (itemstack.getItem() instanceof IBauble && 
+            		((IBauble)itemstack.getItem()).getBaubleType(itemstack)==BaubleType.BODY &&
+    				((IBauble)itemstack.getItem()).canEquip(itemstack, thePlayer) &&
+            		!((Slot)this.inventorySlots.get(14)).getHasStack())
+            {
+                int j = 14;
+                if (!this.mergeItemStack(itemstack1, j, j + 1, false))
+                {
+                    return null;
+                }
+            }
+            else if (itemstack.getItem() instanceof IBauble && 
+            		((IBauble)itemstack.getItem()).getBaubleType(itemstack)==BaubleType.CHARM &&
+    				((IBauble)itemstack.getItem()).canEquip(itemstack, thePlayer) &&
+            		!((Slot)this.inventorySlots.get(15)).getHasStack())
+            {
+                int j = 15;
+                if (!this.mergeItemStack(itemstack1, j, j + 1, false))
+                {
+                    return null;
+                }
+            }
+            else if (itemstack.getItem() instanceof IBauble && 
+            		((IBauble)itemstack.getItem()).getBaubleType(itemstack)==BaubleType.GAUNTLET &&
+    				((IBauble)itemstack.getItem()).canEquip(itemstack, thePlayer) &&
+            		!((Slot)this.inventorySlots.get(16)).getHasStack())
+            {
+                int j = 16;
                 if (!this.mergeItemStack(itemstack1, j, j + 1, false))
                 {
                     return null;

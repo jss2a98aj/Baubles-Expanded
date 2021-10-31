@@ -69,7 +69,7 @@ public class GuiPlayerExpanded extends InventoryEffectRenderer {
     @Override
     protected void drawGuiContainerForegroundLayer(int p_146979_1_, int p_146979_2_)
     {
-        this.fontRendererObj.drawString(I18n.format("container.crafting", new Object[0]), 106, 16, 4210752);
+        this.fontRendererObj.drawString(I18n.format("container.crafting", new Object[0]), 104, 7, 4210752);//106 -> 104, 16 -> 7
     }
 
     /**
