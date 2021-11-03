@@ -1,20 +1,33 @@
 package baubles.api.expanded;
 
+import baubles.api.BaubleType;
+
 public class BaubleExpandedSlots {
 	
 	public static final int slotLimit = 20;
 	
 	private static String[] slots = new String[slotLimit];
 	private static int newSlotsRemaining = slotLimit;
-	
+
+	public static final String ringType = "ring";
+	public static final String amuletType = "amulet";
+	public static final String beltType = "belt";
+
 	static {
-		requestAddSlot("AMULET");
-		requestAddSlot("RING");
-		requestAddSlot("RING");
-		requestAddSlot("BELT");
+		tryAddSlot(amuletType);
+		tryAddSlot(ringType);
+		tryAddSlot(ringType);
+		tryAddSlot(beltType);
+		
+		tryAddSlot(ringType);
+		tryAddSlot(ringType);
+		tryAddSlot(ringType);
+		tryAddSlot(ringType);
+		tryAddSlot(ringType);
+		tryAddSlot(ringType);
 	}
-	
-	public static boolean requestAddSlot(String type) {
+
+	public static boolean tryAddSlot(String type) {
 		//TODO: block after GUI init
 		if(newSlotsRemaining >= 1) {
 			slots[slotLimit - newSlotsRemaining] = type;
@@ -25,7 +38,7 @@ public class BaubleExpandedSlots {
 		return false;
 	}
 
-	public static boolean requestRemoveSlot(String type) {
+	public static boolean tryRemoveSlot(String type) {
 		//TODO: block after GUI init
 		for(int slotToCheck = 0; slotToCheck < slotLimit; slotToCheck++) {
 			if(slots[slotToCheck].equals(type)) {
@@ -39,8 +52,8 @@ public class BaubleExpandedSlots {
 		}
 		return false;
 	}
-	
-	public static int totalCurrentSlotsForType(String type) {
+
+	public static int totalCurrentSlotsOfType(String type) {
 		int total = 0;
 		for(int slotToCheck = 0; slotToCheck < slotLimit; slotToCheck++) {
 			if(slots[slotToCheck].equals(type)) {
@@ -49,17 +62,29 @@ public class BaubleExpandedSlots {
 		}
 		return total;
 	}
-	
+
 	public static int getTotalSlots() {
 		return slotLimit - newSlotsRemaining;
 	}
-	
-	public static String getTypeInSlot(int slot) {
+
+	public static String getSlotType(int slot) {
 		if (slot > 0 & slot < slotLimit) {
 			return slots[slot];
 		} else {
 			return null;
 		}
+	}
+
+	public static String getTypeStringFromBaubleType(BaubleType type) {
+		switch(type) {
+		case RING:
+			return ringType;
+		case AMULET:
+			return amuletType;
+		case BELT:
+			return beltType;
+		}
+		return "unknown";
 	}
 
 }

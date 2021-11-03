@@ -16,6 +16,7 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import baubles.api.expanded.BaubleExpandedSlots;
 import baubles.common.Baubles;
 import baubles.common.container.ContainerPlayerExpanded;
 
@@ -57,15 +58,6 @@ public class GuiPlayerExpanded extends InventoryEffectRenderer {
     }
 
     /**
-     * Draw the foreground layer for the GuiContainer (everything in front of the items)
-     */
-    /*@Override
-    protected void drawGuiContainerForegroundLayer(int p_146979_1_, int p_146979_2_)
-    {
-        this.fontRendererObj.drawString(I18n.format("container.crafting", new Object[0]), 104, 7, 4210752);//106 -> 104, 16 -> 7
-    }*/
-
-    /**
      * Draws the screen and all the components in it.
      */
     @Override
@@ -80,12 +72,10 @@ public class GuiPlayerExpanded extends InventoryEffectRenderer {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.mc.getTextureManager().bindTexture(background);
         this.drawTexturedModalRect(guiLeft, guiTop, 0, 0, this.xSize, this.ySize);
-        
-        for (int i1 = 0; i1 < this.inventorySlots.inventorySlots.size(); ++i1) {
+
+        for (int i1 = 4; i1 < BaubleExpandedSlots.getTotalSlots() + 4; ++i1) {
             Slot slot = (Slot)this.inventorySlots.inventorySlots.get(i1);
-            if (slot.getHasStack() && slot.getSlotStackLimit() == 1) {
-            	this.drawTexturedModalRect(guiLeft + slot.xDisplayPosition, guiTop + slot.yDisplayPosition, 200, 0, 16, 16);
-            }
+            this.drawTexturedModalRect(guiLeft + slot.xDisplayPosition - 1, guiTop + slot.yDisplayPosition - 1, 200, 0, 18, 18);
         }
         drawPlayerModel(guiLeft + 51, guiTop + 75, 30, (float)(guiLeft + 51) - this.xSizeFloat, (float)(guiTop + 75 - 50) - this.ySizeFloat, this.mc.thePlayer);
     }

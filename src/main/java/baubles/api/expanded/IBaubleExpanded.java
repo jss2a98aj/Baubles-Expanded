@@ -3,9 +3,7 @@ package baubles.api.expanded;
 import baubles.api.IBauble;
 import net.minecraft.item.ItemStack;
 
-
 /**
- * 
  * This interface should be extended by items that can be worn in bauble slots.
  * Supports multiple original and expanded slot types.
  * 

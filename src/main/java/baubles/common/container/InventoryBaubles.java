@@ -138,7 +138,7 @@ public class InventoryBaubles implements IInventory {
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack) {
 		if(!blockEvents && this.stackList[slot] != null) {
-        	    ((IBauble)stackList[slot].getItem()).onUnequipped(stackList[slot], player.get());
+        	((IBauble)stackList[slot].getItem()).onUnequipped(stackList[slot], player.get());
 		}
 		this.stackList[slot] = stack;
 		if (!blockEvents && stack != null && stack.getItem() instanceof IBauble) {
@@ -195,7 +195,7 @@ public class InventoryBaubles implements IInventory {
 	 */
 	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack stack) {
-		String slotType = BaubleExpandedSlots.getTypeInSlot(slot);
+		String slotType = BaubleExpandedSlots.getSlotType(slot);
 		if (stack == null || slotType == null) {
 			return false;
 		}
@@ -210,21 +210,7 @@ public class InventoryBaubles implements IInventory {
 			types = ((IBaubleExpanded)item).getBaubleTypes(stack);
 		} else {
 			BaubleType legacyType = ((IBauble)item).getBaubleType(stack);
-			String type;
-			switch(legacyType) {
-			case RING:
-				type = "RING";
-				break;
-			case AMULET:
-				type = "AMULET";
-				break;
-			case BELT:
-				type = "BELT";
-				break;
-			default:
-				type = "UNKNOWN";	
-			}
-			types = new String[] {type};
+			types = new String[] {BaubleExpandedSlots.getTypeStringFromBaubleType(legacyType)};
 		}
 		
 		for(String type : types) {

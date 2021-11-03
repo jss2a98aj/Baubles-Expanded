@@ -4,36 +4,30 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
 import baubles.api.BaubleType;
 import baubles.api.IBauble;
+import baubles.api.expanded.BaubleExpandedSlots;
 import baubles.api.expanded.IBaubleExpanded;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class SlotBauble extends Slot {
 
-	String slotType;
+	private final String slotType;
 
 	@Deprecated
     public SlotBauble(IInventory inventory, BaubleType legacyType, int slot, int x, int y) {
         super(inventory, slot, x, y);
-		switch(legacyType) {
-		case RING:
-			slotType = "RING";
-			break;
-		case AMULET:
-			slotType = "AMULET";
-			break;
-		case BELT:
-			slotType = "BELT";
-			break;
-		default:
-			slotType = "UNKNOWN";	
-		}
+		slotType = BaubleExpandedSlots.getTypeStringFromBaubleType(legacyType);
+
     }
     
     public SlotBauble(IInventory inventory, String type, int slot, int x, int y) {
         super(inventory, slot, x, y);
-        this.slotType = type;
+        slotType = type;
     }
 
     /**
@@ -46,7 +40,7 @@ public class SlotBauble extends Slot {
 		}
 
 		Item item = stack.getItem();
-		if(!(item instanceof IBauble) || !((IBauble) item).canEquip(stack, ((InventoryBaubles)inventory).player.get())) {
+		if(!(item instanceof IBauble) || !((IBauble)item).canEquip(stack, ((InventoryBaubles)inventory).player.get())) {
 			return false;
 		}
 
@@ -55,21 +49,7 @@ public class SlotBauble extends Slot {
 			types = ((IBaubleExpanded)item).getBaubleTypes(stack);
 		} else {
 			BaubleType legacyType = ((IBauble)item).getBaubleType(stack);
-			String type;
-			switch(legacyType) {
-			case RING:
-				type = "RING";
-				break;
-			case AMULET:
-				type = "AMULET";
-				break;
-			case BELT:
-				type = "BELT";
-				break;
-			default:
-				type = "UNKNOWN";	
-			}
-			types = new String[] {type};
+			types = new String[] {BaubleExpandedSlots.getTypeStringFromBaubleType(legacyType)};
 		}
 		
 		for(String type : types) {
@@ -83,12 +63,18 @@ public class SlotBauble extends Slot {
 
 	@Override
 	public boolean canTakeStack(EntityPlayer player) {
-		return this.getStack()!=null && ((IBauble)this.getStack().getItem()).canUnequip(this.getStack(), player);
+		ItemStack itemStack = getStack();
+		return itemStack != null && ((IBauble)itemStack.getItem()).canUnequip(itemStack, player);
 	}
 
 	@Override
     public int getSlotStackLimit() {
         return 1;
     }
+	
+	/*@SideOnly(Side.CLIENT)
+    public IIcon getBackgroundIconIndex() {
+        return null;
+    }*/
 
 }
