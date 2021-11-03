@@ -8,12 +8,15 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.MathHelper;
 import baubles.api.BaubleType;
 import baubles.api.IBauble;
+import baubles.api.expanded.BaubleExpandedSlots;
+import baubles.api.expanded.IBaubleExpanded;
 import baubles.common.Baubles;
 import baubles.common.network.PacketHandler;
 import baubles.common.network.PacketSyncBauble;
@@ -25,7 +28,7 @@ public class InventoryBaubles implements IInventory {
 	public boolean blockEvents=false;
 
 	public InventoryBaubles(EntityPlayer player) {
-		this.stackList = new ItemStack[8];
+		this.stackList = new ItemStack[BaubleExpandedSlots.slotLimit];
 		this.player = new WeakReference<EntityPlayer>(player);
 	}
 
@@ -49,8 +52,8 @@ public class InventoryBaubles implements IInventory {
 	 * Returns the stack in slot i
 	 */
 	@Override
-	public ItemStack getStackInSlot(int par1) {
-		return par1 >= this.getSizeInventory() ? null : this.stackList[par1];
+	public ItemStack getStackInSlot(int slot) {
+		return slot >= this.getSizeInventory() ? null : this.stackList[slot];
 	}
 
 	/**
@@ -75,10 +78,10 @@ public class InventoryBaubles implements IInventory {
 	 * GUI.
 	 */
 	@Override
-	public ItemStack getStackInSlotOnClosing(int par1) {
-		if (this.stackList[par1] != null) {
-			ItemStack itemstack = this.stackList[par1];
-			this.stackList[par1] = null;
+	public ItemStack getStackInSlotOnClosing(int slot) {
+		if (this.stackList[slot] != null) {
+			ItemStack itemstack = this.stackList[slot];
+			this.stackList[slot] = null;
 			return itemstack;
 		} else {
 			return null;
@@ -90,39 +93,37 @@ public class InventoryBaubles implements IInventory {
 	 * (second arg) of items and returns them in a new stack.
 	 */
 	@Override
-	public ItemStack decrStackSize(int par1, int par2) {
-		if (this.stackList[par1] != null) {
+	public ItemStack decrStackSize(int slot, int par2) {
+		if (this.stackList[slot] != null) {
 			ItemStack itemstack;
 
-			if (this.stackList[par1].stackSize <= par2) {
-				itemstack = this.stackList[par1];
+			if (this.stackList[slot].stackSize <= par2) {
+				itemstack = this.stackList[slot];
 
 				if (itemstack != null && itemstack.getItem() instanceof IBauble) {
-					((IBauble) itemstack.getItem()).onUnequipped(itemstack,
-							player.get());
+					((IBauble) itemstack.getItem()).onUnequipped(itemstack, player.get());
 				}
 				
-				this.stackList[par1] = null;
+				this.stackList[slot] = null;
 
 				if (eventHandler != null)
 					this.eventHandler.onCraftMatrixChanged(this);
-				syncSlotToClients(par1);
+				syncSlotToClients(slot);
 				return itemstack;
 			} else {
-				itemstack = this.stackList[par1].splitStack(par2);
+				itemstack = this.stackList[slot].splitStack(par2);
 				
 				if (itemstack != null && itemstack.getItem() instanceof IBauble) {
-					((IBauble) itemstack.getItem()).onUnequipped(itemstack,
-							player.get());
+					((IBauble) itemstack.getItem()).onUnequipped(itemstack, player.get());
 				}
 				
-				if (this.stackList[par1].stackSize == 0) {
-					this.stackList[par1] = null;
+				if (this.stackList[slot].stackSize == 0) {
+					this.stackList[slot] = null;
 				}
 				
 				if (eventHandler != null)
 					this.eventHandler.onCraftMatrixChanged(this);
-				syncSlotToClients(par1);
+				syncSlotToClients(slot);
 				return itemstack;
 			}
 		} else {
@@ -135,19 +136,20 @@ public class InventoryBaubles implements IInventory {
 	 * crafting or armor sections).
 	 */
 	@Override
-	public void setInventorySlotContents(int par1, ItemStack stack) {
-		
-		if(!blockEvents && this.stackList[par1] != null) {
-        	    ((IBauble)stackList[par1].getItem()).onUnequipped(stackList[par1], player.get());
+	public void setInventorySlotContents(int slot, ItemStack stack) {
+		if(!blockEvents && this.stackList[slot] != null) {
+        	    ((IBauble)stackList[slot].getItem()).onUnequipped(stackList[slot], player.get());
 		}
-		this.stackList[par1] = stack;
+		this.stackList[slot] = stack;
 		if (!blockEvents && stack != null && stack.getItem() instanceof IBauble) {
-			if (player.get()!=null)
+			if (player.get()!=null) {
 				((IBauble) stack.getItem()).onEquipped(stack, player.get());
+			}
 		}
-		if (eventHandler != null)
+		if (eventHandler != null) {
 			this.eventHandler.onCraftMatrixChanged(this);
-		syncSlotToClients(par1);
+		}
+		syncSlotToClients(slot);
 	}
 
 	/**
@@ -175,18 +177,16 @@ public class InventoryBaubles implements IInventory {
 	 * with Container
 	 */
 	@Override
-	public boolean isUseableByPlayer(EntityPlayer par1EntityPlayer) {
+	public boolean isUseableByPlayer(EntityPlayer player) {
 		return true;
 	}
 
 	@Override
 	public void openInventory() {
-
 	}
 
 	@Override
 	public void closeInventory() {
-
 	}
 
 	/**
@@ -194,19 +194,45 @@ public class InventoryBaubles implements IInventory {
 	 * stack size) into the given slot.
 	 */
 	@Override
-	public boolean isItemValidForSlot(int i, ItemStack stack) {
-		if (stack == null || !(stack.getItem() instanceof IBauble)
-				|| !((IBauble) stack.getItem()).canEquip(stack, player.get()))
+	public boolean isItemValidForSlot(int slot, ItemStack stack) {
+		String slotType = BaubleExpandedSlots.getTypeInSlot(slot);
+		if (stack == null || slotType == null) {
 			return false;
-		if (i == 0
-				&& ((IBauble) stack.getItem()).getBaubleType(stack) == BaubleType.AMULET)
-			return true;
-		if ((i == 1 || i == 2)
-				&& ((IBauble) stack.getItem()).getBaubleType(stack) == BaubleType.RING)
-			return true;
-		if (i == 3
-				&& ((IBauble) stack.getItem()).getBaubleType(stack) == BaubleType.BELT)
-			return true;
+		}
+		
+		Item item = stack.getItem();
+		if(!(item instanceof IBauble) || !((IBauble) item).canEquip(stack, player.get())) {
+			return false;
+		}
+
+		String[] types;
+		if(item instanceof IBaubleExpanded) {
+			types = ((IBaubleExpanded)item).getBaubleTypes(stack);
+		} else {
+			BaubleType legacyType = ((IBauble)item).getBaubleType(stack);
+			String type;
+			switch(legacyType) {
+			case RING:
+				type = "RING";
+				break;
+			case AMULET:
+				type = "AMULET";
+				break;
+			case BELT:
+				type = "BELT";
+				break;
+			default:
+				type = "UNKNOWN";	
+			}
+			types = new String[] {type};
+		}
+		
+		for(String type : types) {
+			if(type.equals(slotType)) {
+				return true;
+			}
+		}
+
 		return false;
 	}
 
@@ -218,11 +244,11 @@ public class InventoryBaubles implements IInventory {
 	public void saveNBT(NBTTagCompound tags) {
 		NBTTagList tagList = new NBTTagList();
 		NBTTagCompound invSlot;
-		for (int i = 0; i < this.stackList.length; ++i) {
-			if (this.stackList[i] != null) {
+		for (int slot = 0; slot < stackList.length; ++slot) {
+			if (this.stackList[slot] != null) {
 				invSlot = new NBTTagCompound();
-				invSlot.setByte("Slot", (byte) i);
-				this.stackList[i].writeToNBT(invSlot);
+				invSlot.setByte("Slot", (byte) slot);
+				this.stackList[slot].writeToNBT(invSlot);
 				tagList.appendTag(invSlot);
 			}
 		}
@@ -237,53 +263,50 @@ public class InventoryBaubles implements IInventory {
 	public void readNBT(NBTTagCompound tags) {
 		NBTTagList tagList = tags.getTagList("Baubles.Inventory", 10);
 		for (int i = 0; i < tagList.tagCount(); ++i) {
-			NBTTagCompound nbttagcompound = (NBTTagCompound) tagList
-					.getCompoundTagAt(i);
-			int j = nbttagcompound.getByte("Slot") & 255;
-			ItemStack itemstack = ItemStack
-					.loadItemStackFromNBT(nbttagcompound);
+			NBTTagCompound nbttagcompound = (NBTTagCompound) tagList.getCompoundTagAt(i);
+			int slot = nbttagcompound.getByte("Slot") & 255;
+			ItemStack itemstack = ItemStack.loadItemStackFromNBT(nbttagcompound);
 			if (itemstack != null) {
-				this.stackList[j] = itemstack;
+				this.stackList[slot] = itemstack;
 			}
 		}
 	}
 
 	public void dropItems(ArrayList<EntityItem> drops) {
-		for (int i = 0; i < 4; ++i) {
-			if (this.stackList[i] != null) {
-				EntityItem ei = new EntityItem(player.get().worldObj,
-						player.get().posX, player.get().posY
-								+ player.get().eyeHeight, player.get().posZ,
-						this.stackList[i].copy());
-				ei.delayBeforeCanPickup = 40;
+		for (int slot = 0; slot < stackList.length; ++slot) {
+			if (this.stackList[slot] != null) {
+				EntityItem item = new EntityItem(player.get().worldObj,
+						player.get().posX,
+						player.get().posY + player.get().eyeHeight, player.get().posZ,
+						this.stackList[slot].copy());
+				item.delayBeforeCanPickup = 40;
 				float f1 = player.get().worldObj.rand.nextFloat() * 0.5F;
-				float f2 = player.get().worldObj.rand.nextFloat()
-						* (float) Math.PI * 2.0F;
-				ei.motionX = (double) (-MathHelper.sin(f2) * f1);
-				ei.motionZ = (double) (MathHelper.cos(f2) * f1);
-				ei.motionY = 0.20000000298023224D;
-				drops.add(ei);
-				this.stackList[i] = null;
-				syncSlotToClients(i);
+				float f2 = player.get().worldObj.rand.nextFloat() * (float) Math.PI * 2.0F;
+				item.motionX = (double) (-MathHelper.sin(f2) * f1);
+				item.motionZ = (double) (MathHelper.cos(f2) * f1);
+				item.motionY = 0.20000000298023224D;
+				drops.add(item);
+				this.stackList[slot] = null;
+				syncSlotToClients(slot);
 			}
 		}
 	}
-	
-	public void dropItemsAt(ArrayList<EntityItem> drops, Entity e) {
-		for (int i = 0; i < 4; ++i) {
-			if (this.stackList[i] != null) {
-				EntityItem ei = new EntityItem(e.worldObj,
-						e.posX, e.posY + e.getEyeHeight(), e.posZ,
-						this.stackList[i].copy());
-				ei.delayBeforeCanPickup = 40;
-				float f1 = e.worldObj.rand.nextFloat() * 0.5F;
-				float f2 = e.worldObj.rand.nextFloat() * (float) Math.PI * 2.0F;
-				ei.motionX = (double) (-MathHelper.sin(f2) * f1);
-				ei.motionZ = (double) (MathHelper.cos(f2) * f1);
-				ei.motionY = 0.20000000298023224D;
-				drops.add(ei);
-				this.stackList[i] = null;
-				syncSlotToClients(i);
+
+	public void dropItemsAt(ArrayList<EntityItem> drops, Entity entity) {
+		for (int slot = 0; slot < stackList.length; ++slot) {
+			if (this.stackList[slot] != null) {
+				EntityItem item = new EntityItem(entity.worldObj,
+						entity.posX, entity.posY + entity.getEyeHeight(), entity.posZ,
+						this.stackList[slot].copy());
+				item.delayBeforeCanPickup = 40;
+				float f1 = entity.worldObj.rand.nextFloat() * 0.5F;
+				float f2 = entity.worldObj.rand.nextFloat() * (float) Math.PI * 2.0F;
+				item.motionX = (double) (-MathHelper.sin(f2) * f1);
+				item.motionZ = (double) (MathHelper.cos(f2) * f1);
+				item.motionY = 0.20000000298023224D;
+				drops.add(item);
+				this.stackList[slot] = null;
+				syncSlotToClients(slot);
 			}
 		}
 	}
@@ -291,11 +314,11 @@ public class InventoryBaubles implements IInventory {
 	public void syncSlotToClients(int slot) {
 		try {
 			if (Baubles.proxy.getClientWorld() == null) {
-				PacketHandler.INSTANCE.sendToAll(new PacketSyncBauble(player
-						.get(), slot));
+				PacketHandler.INSTANCE.sendToAll(new PacketSyncBauble(player.get(), slot));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
+
 }
