@@ -37,11 +37,9 @@ public class ItemDebugger extends Item implements IBaubleExpanded {
    @SideOnly(Side.CLIENT)
    @Override
    public void registerIcons(IIconRegister ir) {
-	  icons = new IIcon[1 + BaubleExpandedSlots.getCurrentlyRegisteredTypes().size()];
-      icons[0] = ir.registerIcon("baubles:empty_bauble_slot_unknown");
-
-      for(int i = 1; i < icons.length; i++) {
-         icons[i] = ir.registerIcon("baubles:empty_bauble_slot_" + BaubleExpandedSlots.getCurrentlyRegisteredTypes().get(i - 1));
+	  icons = new IIcon[BaubleExpandedSlots.getCurrentlyRegisteredTypes().size()];
+      for(int i = 0; i < icons.length; i++) {
+         icons[i] = ir.registerIcon("baubles:empty_bauble_slot_" + BaubleExpandedSlots.getCurrentlyRegisteredTypes().get(i));
       }
    }
 
@@ -63,10 +61,10 @@ public class ItemDebugger extends Item implements IBaubleExpanded {
    public String[] getBaubleTypes(ItemStack itemStack) {
       String type;
       int meta = itemStack.getItemDamage();
-      if(meta <= 0 || meta >= icons.length) {
-         type = BaubleExpandedSlots.unknown;
+      if(meta <= 0 || meta > icons.length) {
+         type = BaubleExpandedSlots.unknownType;
       } else {
-         type = BaubleExpandedSlots.getCurrentlyRegisteredTypes().get(meta - 1);
+         type = BaubleExpandedSlots.getCurrentlyRegisteredTypes().get(meta);
       }
       return new String[] {type};
    }
@@ -118,7 +116,7 @@ public class ItemDebugger extends Item implements IBaubleExpanded {
    @SideOnly(Side.CLIENT)
    public IIcon getBackgroundIconForSlotType(String type) {
        if(type != null && BaubleExpandedSlots.isTypeRegistered(type)) {
-           return icons[1 + BaubleExpandedSlots.indexOfTypeInRegisteredTypes(type)];
+           return icons[BaubleExpandedSlots.indexOfTypeInRegisteredTypes(type)];
        } else {
     	   return icons[0];
        }

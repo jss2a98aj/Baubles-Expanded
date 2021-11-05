@@ -11,7 +11,7 @@ public class BaubleExpandedSlots {
     public static final int slotLimit = 20;
 
     //Fallback for if a slot type cannot be found
-    public static final String unknown = "unknown";
+    public static final String unknownType = "unknown";
     //All "default" types will be registered automatically.
     public static final String ringType = "ring";
     public static final String amuletType = "amulet";
@@ -19,25 +19,30 @@ public class BaubleExpandedSlots {
     public static final String headType = "head";
     public static final String bodyType = "body";
     public static final String charmType = "charm";
+    public static final String shieldType = "shield";
     public static final String gauntletType = "gauntlet";
     public static final String capeType = "cape";
 
     private static String[] slots = new String[slotLimit];
     private static ArrayList<String> registeredTypes = new ArrayList<String>();
     static {
+    	registeredTypes.add(unknownType);
         registeredTypes.add(ringType);
         registeredTypes.add(amuletType);
         registeredTypes.add(beltType);
         registeredTypes.add(headType);
         registeredTypes.add(bodyType);
         registeredTypes.add(charmType);
+        registeredTypes.add(shieldType);
         registeredTypes.add(gauntletType);
         registeredTypes.add(capeType);
     }
     private static int newSlotsRemaining = slotLimit;
 
     //TODO: Sort slots, locked after post init
+    //TODO: Prevent items in the wrong slot from applying effects
     //TODO: Lock removing slots added during pre init
+    //TODO: Option to show all slots
     
     /**
      * Tries to add a new slot type if the loader state is currently
@@ -58,7 +63,6 @@ public class BaubleExpandedSlots {
     public static int indexOfTypeInRegisteredTypes(String type) {
     	return registeredTypes.indexOf(type);
     }
-    
     
     /**
      * Returns if the type is registered or not.
@@ -162,7 +166,7 @@ public class BaubleExpandedSlots {
         if (slot >= 0 & slot < slotLimit) {
             return slots[slot];
         } else {
-            return unknown;
+            return unknownType;
         }
     }
 
@@ -181,7 +185,7 @@ public class BaubleExpandedSlots {
         case BELT:
             return beltType;
         default:
-            return unknown;  
+            return unknownType;  
         }
     }
 
