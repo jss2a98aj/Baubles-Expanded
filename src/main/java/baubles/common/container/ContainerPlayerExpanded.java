@@ -16,6 +16,7 @@ import net.minecraft.util.IIcon;
 import baubles.api.BaubleType;
 import baubles.api.IBauble;
 import baubles.api.expanded.BaubleExpandedSlots;
+import baubles.api.expanded.BaubleSlotTypeBackgroundIconManager;
 import baubles.api.expanded.IBaubleExpanded;
 import baubles.common.lib.PlayerHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -50,6 +51,7 @@ public class ContainerPlayerExpanded extends Container {
                     return itemStack.getItem().isValidArmor(itemStack, k, thePlayer);
                 }
                 
+                @Override
                 @SideOnly(Side.CLIENT)
                 public IIcon getBackgroundIconIndex() {
                     return ItemArmor.func_94602_b(k);
@@ -64,7 +66,15 @@ public class ContainerPlayerExpanded extends Container {
         
         //bauble slots
         for(i = 0; i < totalBaubleSlots; i++) {
-            addSlotToContainer(new SlotBauble(baubles, BaubleExpandedSlots.getSlotType(i), i, slotStartX + (slotOffset * (i / 4)), slotStartY + (slotOffset * (i % 4))));
+        	final String type = BaubleExpandedSlots.getSlotType(i);
+            addSlotToContainer(new SlotBauble(baubles, BaubleExpandedSlots.getSlotType(i), i, slotStartX + (slotOffset * (i / 4)), slotStartY + (slotOffset * (i % 4))) {
+            	@Override
+            	@SideOnly(Side.CLIENT)
+            	public IIcon getBackgroundIconIndex() {
+            		//Not working?
+                    return BaubleSlotTypeBackgroundIconManager.getBackgroundIconForSlotType(type);
+                }
+            });
         }
 
         //inventory slots
@@ -112,8 +122,7 @@ public class ContainerPlayerExpanded extends Container {
                 		if(item instanceof IBaubleExpanded) {
                 			types = ((IBaubleExpanded)item).getBaubleTypes(itemstack);
                 		} else {
-                			BaubleType legacyType = ((IBauble)item).getBaubleType(itemstack);
-                			types = new String[] {BaubleExpandedSlots.getTypeStringFromBaubleType(legacyType)};
+                			types = new String[] {BaubleExpandedSlots.getTypeStringFromBaubleType(((IBauble)item).getBaubleType(itemstack))};
                 		}
                 		for(String type : types) {
                 			if(type.equals(BaubleExpandedSlots.getSlotType(baubleSlot - 4)) && !mergeItemStack(itemstack1, baubleSlot, baubleSlot + 1, false)) {

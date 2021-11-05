@@ -1,4 +1,7 @@
 #
+# ITEMS
+item.baubleSlotDebugTool.name=Bauble Slot Debug Tool
+#
 # GUI
 button.baubles=Baubles
 button.normal=Normal

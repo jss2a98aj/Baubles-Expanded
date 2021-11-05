@@ -63,19 +63,19 @@ public class GuiPlayerExpanded extends InventoryEffectRenderer {
     @Override
     public void drawScreen(int par1, int par2, float par3) {
         super.drawScreen(par1, par2, par3);
-        this.xSizeFloat = (float)par1;
-        this.ySizeFloat = (float)par2;
+        xSizeFloat = (float)par1;
+        ySizeFloat = (float)par2;
     }
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float p_146976_1_, int p_146976_2_, int p_146976_3_) {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.mc.getTextureManager().bindTexture(background);
-        this.drawTexturedModalRect(guiLeft, guiTop, 0, 0, this.xSize, this.ySize);
+        mc.getTextureManager().bindTexture(background);
+        drawTexturedModalRect(guiLeft, guiTop, 0, 0, this.xSize, this.ySize);
 
         for (int i1 = 4; i1 < BaubleExpandedSlots.getTotalSlots() + 4; ++i1) {
             Slot slot = (Slot)this.inventorySlots.inventorySlots.get(i1);
-            this.drawTexturedModalRect(guiLeft + slot.xDisplayPosition - 1, guiTop + slot.yDisplayPosition - 1, 200, 0, 18, 18);
+            drawTexturedModalRect(guiLeft + slot.xDisplayPosition - 1, guiTop + slot.yDisplayPosition - 1, 200, 0, 18, 18);
         }
         drawPlayerModel(guiLeft + 51, guiTop + 75, 30, (float)(guiLeft + 51) - this.xSizeFloat, (float)(guiTop + 75 - 50) - this.ySizeFloat, this.mc.thePlayer);
     }
@@ -126,11 +126,12 @@ public class GuiPlayerExpanded extends InventoryEffectRenderer {
     }
 
 	@Override
-	protected void keyTyped(char par1, int par2) {
-		if (par2 == Baubles.proxy.keyHandler.key.getKeyCode()) {
+	protected void keyTyped(char par1, int keyCode) {
+		if (keyCode == Baubles.proxy.keyHandler.key.getKeyCode()) {
             this.mc.thePlayer.closeScreen();
-        } else
-		super.keyTyped(par1, par2);
+        } else {
+        	super.keyTyped(par1, keyCode);
+        }
 	}
 
 }

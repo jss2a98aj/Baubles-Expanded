@@ -2,11 +2,10 @@ package baubles.common;
 
 import java.io.File;
 
-import net.minecraftforge.common.MinecraftForge;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import baubles.api.expanded.BaubleExpandedSlots;
 import baubles.common.event.EventHandlerEntity;
 import baubles.common.event.EventHandlerNetwork;
 import baubles.common.network.PacketHandler;
@@ -16,51 +15,62 @@ import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraft.item.Item;
+import net.minecraftforge.common.MinecraftForge;
 
-@Mod(modid = Baubles.MODID, name = Baubles.MODNAME, version = Baubles.VERSION, dependencies="required-after:Forge@[10.13.2,);")
+@Mod(modid = Baubles.MODID, name = Baubles.MODNAME, version = Baubles.VERSION)
 
 public class Baubles {
-	
+
 	public static final String MODID = "Baubles";
 	public static final String MODNAME = "Baubles";
 	public static final String VERSION = "1.0.1.10";
 
 	@SidedProxy(clientSide = "baubles.client.ClientProxy", serverSide = "baubles.common.CommonProxy")
 	public static CommonProxy proxy;
-	
+
 	@Instance(value=Baubles.MODID)
 	public static Baubles instance;
-	
+
 	public EventHandlerEntity entityEventHandler;
 	public EventHandlerNetwork entityEventNetwork;
 	public File modDir;
-	
+
 	public static final Logger log = LogManager.getLogger("Baubles");
 	public static final int GUI = 0;
+
+	private static Item itemDebugger;
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		event.getModMetadata().version = Baubles.VERSION;
 		modDir = event.getModConfigurationDirectory();		
-		
+
 		PacketHandler.init();
-		
+
 		entityEventHandler = new EventHandlerEntity();
 		entityEventNetwork = new EventHandlerNetwork();
-		
+
 		MinecraftForge.EVENT_BUS.register(entityEventHandler);
 		FMLCommonHandler.instance().bus().register(entityEventNetwork);
 		proxy.registerHandlers();
+
+		itemDebugger = new ItemDebugger().setUnlocalizedName("baubleSlotDebugTool");
+		GameRegistry.registerItem(itemDebugger, "bauble_slot_debug_tool", Baubles.MODID);
 		
+		BaubleExpandedSlots.tryAddSlot(BaubleExpandedSlots.amuletType);
+		BaubleExpandedSlots.tryAddSlot(BaubleExpandedSlots.ringType);
+		BaubleExpandedSlots.tryAddSlot(BaubleExpandedSlots.ringType);
+		BaubleExpandedSlots.tryAddSlot(BaubleExpandedSlots.beltType);
 	}
 
 	@EventHandler
-	public void init(FMLInitializationEvent evt) {
+	public void init(FMLInitializationEvent event) {
 		NetworkRegistry.INSTANCE.registerGuiHandler(instance, proxy);
   		proxy.registerKeyBindings();
 	}
-		
+	
 }

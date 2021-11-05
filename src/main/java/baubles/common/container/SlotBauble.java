@@ -10,6 +10,7 @@ import net.minecraft.util.IIcon;
 import baubles.api.BaubleType;
 import baubles.api.IBauble;
 import baubles.api.expanded.BaubleExpandedSlots;
+import baubles.api.expanded.BaubleSlotTypeBackgroundIconManager;
 import baubles.api.expanded.IBaubleExpanded;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -48,10 +49,9 @@ public class SlotBauble extends Slot {
 		if(item instanceof IBaubleExpanded) {
 			types = ((IBaubleExpanded)item).getBaubleTypes(stack);
 		} else {
-			BaubleType legacyType = ((IBauble)item).getBaubleType(stack);
-			types = new String[] {BaubleExpandedSlots.getTypeStringFromBaubleType(legacyType)};
+			types = new String[] {BaubleExpandedSlots.getTypeStringFromBaubleType(((IBauble)item).getBaubleType(stack))};
 		}
-		
+
 		for(String type : types) {
 			if(type.equals(slotType)) {
 				return true;
@@ -72,9 +72,10 @@ public class SlotBauble extends Slot {
         return 1;
     }
 	
-	/*@SideOnly(Side.CLIENT)
+	/*@Override
+	@SideOnly(Side.CLIENT)
     public IIcon getBackgroundIconIndex() {
-        return null;
+        return BaubleSlotTypeBackgroundIconManager.getBackgroundIconForSlotType(slotType);
     }*/
 
 }
