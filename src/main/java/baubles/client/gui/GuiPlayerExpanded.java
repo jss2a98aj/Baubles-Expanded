@@ -73,7 +73,7 @@ public class GuiPlayerExpanded extends InventoryEffectRenderer {
         mc.getTextureManager().bindTexture(background);
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, this.xSize, this.ySize);
 
-        for (int i1 = 4; i1 < BaubleExpandedSlots.getTotalSlots() + 4; ++i1) {
+        for (int i1 = 4; i1 < BaubleExpandedSlots.slotsCurrentlyUsed() + 4; ++i1) {
             Slot slot = (Slot)this.inventorySlots.inventorySlots.get(i1);
             drawTexturedModalRect(guiLeft + slot.xDisplayPosition - 1, guiTop + slot.yDisplayPosition - 1, 200, 0, 18, 18);
         }

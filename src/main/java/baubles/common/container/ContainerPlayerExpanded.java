@@ -16,7 +16,6 @@ import net.minecraft.util.IIcon;
 import baubles.api.BaubleType;
 import baubles.api.IBauble;
 import baubles.api.expanded.BaubleExpandedSlots;
-import baubles.api.expanded.BaubleSlotTypeBackgroundIconManager;
 import baubles.api.expanded.IBaubleExpanded;
 import baubles.common.lib.PlayerHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -62,19 +61,11 @@ public class ContainerPlayerExpanded extends Container {
         final int slotOffset = 18;
         final int slotStartX = 80;
         final int slotStartY = 8;
-        final int totalBaubleSlots = BaubleExpandedSlots.getTotalSlots();
+        final int totalBaubleSlots = BaubleExpandedSlots.slotsCurrentlyUsed();
         
         //bauble slots
         for(i = 0; i < totalBaubleSlots; i++) {
-        	final String type = BaubleExpandedSlots.getSlotType(i);
-            addSlotToContainer(new SlotBauble(baubles, BaubleExpandedSlots.getSlotType(i), i, slotStartX + (slotOffset * (i / 4)), slotStartY + (slotOffset * (i % 4))) {
-            	@Override
-            	@SideOnly(Side.CLIENT)
-            	public IIcon getBackgroundIconIndex() {
-            		//Not working?
-                    return BaubleSlotTypeBackgroundIconManager.getBackgroundIconForSlotType(type);
-                }
-            });
+            addSlotToContainer(new SlotBauble(baubles, BaubleExpandedSlots.getSlotType(i), i, slotStartX + (slotOffset * (i / 4)), slotStartY + (slotOffset * (i % 4))));
         }
 
         //inventory slots
@@ -103,7 +94,7 @@ public class ContainerPlayerExpanded extends Container {
     public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex) {
         ItemStack itemstack = null;
         Slot slot = (Slot)inventorySlots.get(slotIndex);
-        final int totalBaubleSlots = BaubleExpandedSlots.getTotalSlots();
+        final int totalBaubleSlots = BaubleExpandedSlots.slotsCurrentlyUsed();
 
         if (slot != null && slot.getHasStack()) {
             ItemStack itemstack1 = slot.getStack();
@@ -122,7 +113,7 @@ public class ContainerPlayerExpanded extends Container {
                 		if(item instanceof IBaubleExpanded) {
                 			types = ((IBaubleExpanded)item).getBaubleTypes(itemstack);
                 		} else {
-                			types = new String[] {BaubleExpandedSlots.getTypeStringFromBaubleType(((IBauble)item).getBaubleType(itemstack))};
+                			types = new String[] {BaubleExpandedSlots.getTypeFromBaubleType(((IBauble)item).getBaubleType(itemstack))};
                 		}
                 		for(String type : types) {
                 			if(type.equals(BaubleExpandedSlots.getSlotType(baubleSlot - 4)) && !mergeItemStack(itemstack1, baubleSlot, baubleSlot + 1, false)) {

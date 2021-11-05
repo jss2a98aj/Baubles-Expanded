@@ -210,7 +210,7 @@ public class InventoryBaubles implements IInventory {
 			types = ((IBaubleExpanded)item).getBaubleTypes(stack);
 		} else {
 			BaubleType legacyType = ((IBauble)item).getBaubleType(stack);
-			types = new String[] {BaubleExpandedSlots.getTypeStringFromBaubleType(legacyType)};
+			types = new String[] {BaubleExpandedSlots.getTypeFromBaubleType(legacyType)};
 		}
 		
 		for(String type : types) {

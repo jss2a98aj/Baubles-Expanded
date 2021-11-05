@@ -10,8 +10,9 @@ import net.minecraft.util.IIcon;
 import baubles.api.BaubleType;
 import baubles.api.IBauble;
 import baubles.api.expanded.BaubleExpandedSlots;
-import baubles.api.expanded.BaubleSlotTypeBackgroundIconManager;
 import baubles.api.expanded.IBaubleExpanded;
+import baubles.common.Baubles;
+import baubles.common.ItemDebugger;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -22,7 +23,7 @@ public class SlotBauble extends Slot {
 	@Deprecated
     public SlotBauble(IInventory inventory, BaubleType legacyType, int slot, int x, int y) {
         super(inventory, slot, x, y);
-		slotType = BaubleExpandedSlots.getTypeStringFromBaubleType(legacyType);
+		slotType = BaubleExpandedSlots.getTypeFromBaubleType(legacyType);
 
     }
     
@@ -49,7 +50,7 @@ public class SlotBauble extends Slot {
 		if(item instanceof IBaubleExpanded) {
 			types = ((IBaubleExpanded)item).getBaubleTypes(stack);
 		} else {
-			types = new String[] {BaubleExpandedSlots.getTypeStringFromBaubleType(((IBauble)item).getBaubleType(stack))};
+			types = new String[] {BaubleExpandedSlots.getTypeFromBaubleType(((IBauble)item).getBaubleType(stack))};
 		}
 
 		for(String type : types) {
@@ -72,10 +73,10 @@ public class SlotBauble extends Slot {
         return 1;
     }
 	
-	/*@Override
+	@Override
 	@SideOnly(Side.CLIENT)
     public IIcon getBackgroundIconIndex() {
-        return BaubleSlotTypeBackgroundIconManager.getBackgroundIconForSlotType(slotType);
-    }*/
+        return ((ItemDebugger) Baubles.itemDebugger).getBackgroundIconForSlotType(slotType);
+    }
 
 }

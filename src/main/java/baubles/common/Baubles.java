@@ -42,7 +42,7 @@ public class Baubles {
 	public static final Logger log = LogManager.getLogger("Baubles");
 	public static final int GUI = 0;
 
-	private static Item itemDebugger;
+	public static final Item itemDebugger = new ItemDebugger().setUnlocalizedName("baubleSlotDebugTool");
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
@@ -58,9 +58,6 @@ public class Baubles {
 		FMLCommonHandler.instance().bus().register(entityEventNetwork);
 		proxy.registerHandlers();
 
-		itemDebugger = new ItemDebugger().setUnlocalizedName("baubleSlotDebugTool");
-		GameRegistry.registerItem(itemDebugger, "bauble_slot_debug_tool", Baubles.MODID);
-		
 		BaubleExpandedSlots.tryAddSlot(BaubleExpandedSlots.amuletType);
 		BaubleExpandedSlots.tryAddSlot(BaubleExpandedSlots.ringType);
 		BaubleExpandedSlots.tryAddSlot(BaubleExpandedSlots.ringType);
@@ -71,6 +68,7 @@ public class Baubles {
 	public void init(FMLInitializationEvent event) {
 		NetworkRegistry.INSTANCE.registerGuiHandler(instance, proxy);
   		proxy.registerKeyBindings();
+  		GameRegistry.registerItem(itemDebugger, "bauble_slot_debug_tool", Baubles.MODID);
 	}
 	
 }
