@@ -22,7 +22,7 @@ import baubles.common.container.ContainerPlayerExpanded;
 
 public class GuiPlayerExpanded extends InventoryEffectRenderer {
 
-	public static final ResourceLocation background = new ResourceLocation("baubles","textures/gui/expanded_inventory.png");
+	public static final ResourceLocation background = new ResourceLocation("baubles","textures/gui/bauble_inventory.png");
 
 	/**
      * x size of the inventory window in pixels. Defined as  float, passed as int
