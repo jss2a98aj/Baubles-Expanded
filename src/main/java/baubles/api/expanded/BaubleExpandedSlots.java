@@ -122,12 +122,12 @@ public class BaubleExpandedSlots {
 
     /**
      * Returns if a slot was assigned successfully.
-     * Does not assign a slot type if the type is unregistered, no slots
+     * Does not assign a type to a slot if the type is unregistered, no slots
      * are free, or the loader state is not pre-initialization.
      * 
-     * @param type The type of the slot to be assigned.
+     * @param type The type to attempt assigning to a slot.
      * 
-     * @return If assigning a slot was successful or not.
+     * @return If assigning a type to a slot was successful or not.
      */
     public static boolean tryAssignSlotOfType(String type) {
         if(newSlotsRemaining >= 1 && isTypeRegistered(type) && !type.equals(unknownType) && Loader.instance().getLoaderState() == LoaderState.PREINITIALIZATION) {
@@ -141,9 +141,9 @@ public class BaubleExpandedSlots {
 
    /**
     * Unassigns the last slot of the specified type if one can be found
-    * and the loader state is not pre-initialization.
+    * and the loader state is pre-initialization.
     * 
-    * @param type The type of the slot to be removed.
+    * @param type The type of the slot to be unassigned.
     * 
     * @return If unassigning a slot was successful or not.
     */
@@ -168,7 +168,7 @@ public class BaubleExpandedSlots {
      * 
      * @param type The type of slot being counted.
      * 
-     * @return The current total number of matching slots found.
+     * @return The current total slots with a matching type assigned.
      */
     public static int totalCurrentlyAssignedSlotsOfType(String type) {
         int total = 0;

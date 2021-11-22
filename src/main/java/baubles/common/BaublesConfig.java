@@ -29,7 +29,7 @@ public class BaublesConfig {
         String[] currentSlotAssignments = BaubleExpandedSlots.getCurrentSlotAssignments();
 
         //categoryDebug
-        hideDebugItem = config.getBoolean("hideDebugItem", categoryDebug, hideDebugItem, "Hide the Bauble debug item from creative tabs.\n");
+        hideDebugItem = config.getBoolean("hideDebugItem", categoryDebug, hideDebugItem, "Hides the Bauble debug item from the creative menu.\n");
 
         //categoryMenu
         showUnusedSlots = config.getBoolean("showUnusedSlots", categoryMenu, showUnusedSlots, "Display unused Bauble slots.\n");
