@@ -45,11 +45,9 @@ public class ItemDebugger extends Item implements IBaubleExpanded {
     @SideOnly(Side.CLIENT)
     @Override
     public void getSubItems(Item item, CreativeTabs tab, List list) {
-	if(!BaublesConfig.hideDebugItem) {
 		for(int i = 0; i < icons.length; i++) {
-		      list.add(new ItemStack(this, 1, i));
-		  } 
-	   }
+		    list.add(new ItemStack(this, 1, i));
+		}
    }
 
    @Override
