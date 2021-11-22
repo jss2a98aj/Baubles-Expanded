@@ -5,13 +5,13 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.HashMap;
 
+import com.google.common.io.Files;
+
+import baubles.common.Baubles;
+import baubles.common.container.InventoryBaubles;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
-import baubles.common.Baubles;
-import baubles.common.container.InventoryBaubles;
-
-import com.google.common.io.Files;
 
 public class PlayerHandler {
 

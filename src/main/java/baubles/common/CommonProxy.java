@@ -1,11 +1,11 @@
 
 package baubles.common;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.world.World;
 import baubles.common.container.ContainerPlayerExpanded;
 import baubles.common.event.KeyHandler;
 import cpw.mods.fml.common.network.IGuiHandler;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.World;
 
 
 

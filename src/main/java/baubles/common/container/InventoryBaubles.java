@@ -3,6 +3,13 @@ package baubles.common.container;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
+import baubles.api.BaubleType;
+import baubles.api.IBauble;
+import baubles.api.expanded.BaubleExpandedSlots;
+import baubles.api.expanded.IBaubleExpanded;
+import baubles.common.Baubles;
+import baubles.common.network.PacketHandler;
+import baubles.common.network.PacketSyncBauble;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,13 +20,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.MathHelper;
-import baubles.api.BaubleType;
-import baubles.api.IBauble;
-import baubles.api.expanded.BaubleExpandedSlots;
-import baubles.api.expanded.IBaubleExpanded;
-import baubles.common.Baubles;
-import baubles.common.network.PacketHandler;
-import baubles.common.network.PacketSyncBauble;
 
 public class InventoryBaubles implements IInventory {
 	public ItemStack[] stackList;

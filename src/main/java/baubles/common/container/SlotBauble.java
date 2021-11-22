@@ -1,12 +1,5 @@
 package baubles.common.container;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemArmor;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 import baubles.api.BaubleType;
 import baubles.api.IBauble;
 import baubles.api.expanded.BaubleExpandedSlots;
@@ -15,6 +8,12 @@ import baubles.common.Baubles;
 import baubles.common.ItemDebugger;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Slot;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
 
 public class SlotBauble extends Slot {
 
@@ -29,7 +28,11 @@ public class SlotBauble extends Slot {
     
     public SlotBauble(IInventory inventory, String type, int slot, int x, int y) {
         super(inventory, slot, x, y);
-        slotType = type;
+        if(type == null) {
+        	slotType = BaubleExpandedSlots.unknownType;
+        } else {
+        	slotType = type;
+        }
     }
 
     /**
@@ -37,7 +40,7 @@ public class SlotBauble extends Slot {
      */
     @Override
     public boolean isItemValid(ItemStack stack) {
-    	if (stack == null || slotType == null) {
+    	if (stack == null) {
 			return false;
 		}
 

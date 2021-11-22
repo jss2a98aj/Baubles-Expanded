@@ -13,8 +13,8 @@ public interface IBaubleExpanded extends IBauble {
 	
 	/**
 	 * This method returns the types of bauble slots this item can go into.
-	 * getBaubleType is ignored when using IBaubleExpanded.
-	 * Original slots can be used by putting "AMULET" "RING" or BELT" in the array.
+	 * getBaubleType is generally ignored when using IBaubleExpanded, so it can return null unless you want backwards compatibility with official bauble builds.
+	 * Pre-registered slot types can be found in BaubleExpandedSlots, but it is possible to add more during pre-initialization.
 	 */
 	public String[] getBaubleTypes (ItemStack itemstack);
 

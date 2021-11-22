@@ -2,15 +2,15 @@ package baubles.client.gui;
 
 import java.lang.reflect.Method;
 
-import net.minecraft.client.gui.inventory.GuiInventory;
-import net.minecraft.client.resources.I18n;
-import net.minecraftforge.client.event.GuiScreenEvent;
 import baubles.common.network.PacketHandler;
 import baubles.common.network.PacketOpenBaublesInventory;
 import baubles.common.network.PacketOpenNormalInventory;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.gui.inventory.GuiInventory;
+import net.minecraft.client.resources.I18n;
+import net.minecraftforge.client.event.GuiScreenEvent;
 
 public class GuiEvents {	
 	

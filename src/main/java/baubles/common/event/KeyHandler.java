@@ -1,8 +1,5 @@
 package baubles.common.event;
 
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.util.StatCollector;
-
 import org.lwjgl.input.Keyboard;
 
 import baubles.common.network.PacketHandler;
@@ -14,6 +11,8 @@ import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.util.StatCollector;
 
 public class KeyHandler {
 	

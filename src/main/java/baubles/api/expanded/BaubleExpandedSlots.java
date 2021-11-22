@@ -7,92 +7,131 @@ import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.LoaderState;
 
 public class BaubleExpandedSlots {
+
     //The total number of slots that can be added.
+    //Please keep in mind that increases to this limit are possible with minimal changes.
     public static final int slotLimit = 20;
 
-    //Fallback for if a slot type cannot be found
+    //The type used in place of null.
     public static final String unknownType = "unknown";
-    //All "default" types will be registered automatically.
+
+    //Ppre-registered types.
     public static final String ringType = "ring";
     public static final String amuletType = "amulet";
     public static final String beltType = "belt";
     public static final String headType = "head";
     public static final String bodyType = "body";
     public static final String charmType = "charm";
-    public static final String shieldType = "shield";
-    public static final String gauntletType = "gauntlet";
     public static final String capeType = "cape";
+    public static final String shieldType = "shield";
+    public static final String quiverType = "quiver";
+    public static final String gauntletType = "gauntlet";
 
-    private static String[] slots = new String[slotLimit];
-    private static ArrayList<String> registeredTypes = new ArrayList<String>();
-    static {
-    	registeredTypes.add(unknownType);
-        registeredTypes.add(ringType);
-        registeredTypes.add(amuletType);
-        registeredTypes.add(beltType);
-        registeredTypes.add(headType);
-        registeredTypes.add(bodyType);
-        registeredTypes.add(charmType);
-        registeredTypes.add(shieldType);
-        registeredTypes.add(gauntletType);
-        registeredTypes.add(capeType);
-    }
-    private static int newSlotsRemaining = slotLimit;
-
-    //TODO: Sort slots, locked after post init
-    //TODO: Prevent items in the wrong slot from applying effects
-    //TODO: Lock removing slots added during pre init
-    //TODO: Option to show all slots
-    
     /**
-     * Tries to add a new slot type if the loader state is currently
-     * in Pre Initialization and the slot type has not already been registered.
+     * Registers a type and returns true if the type could be or has been registered.
+     * Types can only be registered while the loader state is pre-initialization.
      * 
-     * @return      If adding a type  was successful
+     * @param type The type to register.
+     * @return If a type was registered or had been registered previously.
      */
     public static boolean tryRegisterType(String type) {
-        if(type != null && type.length() > 0 && Loader.instance().getLoaderState() == LoaderState.PREINITIALIZATION && !registeredTypes.contains(type)) {
-            registeredTypes.add(type);
-            return true;
-        } else {
-            return false;
+        if(type != null && type.length() > 0) {
+            if(isTypeRegistered(type)) {
+                return true;
+            } else {
+                if(Loader.instance().getLoaderState() == LoaderState.PREINITIALIZATION) {
+                    registeredTypes.add(type);
+                    return true;
+                }
+            }
         }
-        
+        return false;
     }
-    
-    public static int indexOfTypeInRegisteredTypes(String type) {
-    	return registeredTypes.indexOf(type);
-    }
-    
+
     /**
-     * Returns if the type is registered or not.
+     * Returns false if the type is unregistered or unknown, the minimum number of
+     * assigned slots cannot be met, or the loader state is not pre-initialization.
      * 
-     * @return      If the type is registered or not
-     */
-    public static boolean isTypeRegistered(String type) {
-    	return registeredTypes.contains(type);
-    }
-    
-    /**
-     * Returns the currently registered bauble types.
-     * If Pre Initialization is done this list is effectively final.
+     * @param type The type of the slot to evaluate and possibly assign.
+     * @param minumumOfType The minimum slots of type to be assigned.
      * 
-     * @return      The currently registered bauble types
+     * @return If the total assigned slots of the specified type equals or is more than the minimum.
      */
-    public static ArrayList<String> getCurrentlyRegisteredTypes() {
-        return registeredTypes;
+    public static boolean tryAssignSlotsUpToMinimum(String type, int minumumOfType) {
+        if(minumumOfType >= 1 && isTypeRegistered(type) && !type.equals(unknownType) && Loader.instance().getLoaderState() == LoaderState.PREINITIALIZATION) {
+            int total = 0;
+            for(int slotToCheck = 0; slotToCheck < slotLimit; slotToCheck++) {
+                if(assignedSlots[slotToCheck].equals(type)) {
+                    total++;
+                }
+            }
+            if(total < minumumOfType) {
+                total = minumumOfType - total;
+                for(int i = 0; i < total; i++) {
+                    if(newSlotsRemaining >= 1) {
+                        assignedSlots[slotLimit - newSlotsRemaining] = type;
+                        newSlotsRemaining--;
+                    } else {
+                        return false;
+                    }
+                }
+            } else {
+                return true;
+            }
+        }
+        return false;
     }
-    
+
     /**
-    * Returns if a new slot was added successfully.
-    * Does not add a slot type if the type is unregistered or no slots are free.
-    * 
-    * @param type  The type of the slot to be added
-    * @return      If adding a slot was successful or not
-    */
-    public static boolean tryAddSlot(String type) {
-        if(newSlotsRemaining >= 1 && registeredTypes.contains(type)) {
-            slots[slotLimit - newSlotsRemaining] = type;
+     * Returns false if the type is unregistered or unknown, or the
+     * loader state is not pre-initialization.
+     * 
+     * @param type The type of the slot to evaluate and possibly unassign.
+     * @param minumumOfType The minimum slots of type to be assigned.
+     * 
+     * @return If the total assigned slots of the specified type equals or is less then the maximum.
+     */
+    public static boolean tryUnassignSlotsDownToMaximum(String type, int maximumOfType) {
+        if(maximumOfType < 0) maximumOfType = 0;
+        if(isTypeRegistered(type) && !type.equals(unknownType) && Loader.instance().getLoaderState() == LoaderState.PREINITIALIZATION) {
+            int total = 0;
+            for(int slotToCheck = 0; slotToCheck < slotLimit; slotToCheck++) {
+                if(assignedSlots[slotToCheck].equals(type)) {
+                    total++;
+                }
+            }
+            if(total > maximumOfType) {
+                total -= maximumOfType;
+                for(int i = 0; i < total; i++) {
+                    for(int slotToCheck = slotsCurrentlyUsed(); slotToCheck > 0; slotToCheck--) {
+                        if(assignedSlots[slotToCheck].equals(type)) {
+                            for(int slotToMove = slotToCheck + 1; slotToMove < slotLimit; slotToMove++) {
+                                assignedSlots[slotToMove - 1] = assignedSlots[slotToMove];
+                            }
+                            assignedSlots[slotLimit - 1] = unknownType;
+                            newSlotsRemaining++;
+                            break;
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Returns if a slot was assigned successfully.
+     * Does not assign a slot type if the type is unregistered, no slots
+     * are free, or the loader state is not pre-initialization.
+     * 
+     * @param type The type of the slot to be assigned.
+     * 
+     * @return If assigning a slot was successful or not.
+     */
+    public static boolean tryAssignSlotOfType(String type) {
+        if(newSlotsRemaining >= 1 && isTypeRegistered(type) && !type.equals(unknownType) && Loader.instance().getLoaderState() == LoaderState.PREINITIALIZATION) {
+            assignedSlots[slotLimit - newSlotsRemaining] = type;
             newSlotsRemaining--;
             return true;
         } else {
@@ -100,82 +139,130 @@ public class BaubleExpandedSlots {
         }
     }
 
-    /**
-    * Remove a slot of the specified type if one can be found.
+   /**
+    * Unassigns the last slot of the specified type if one can be found
+    * and the loader state is not pre-initialization.
     * 
-    * @param type  The type of the slot to be removed
-    * @return      If removing a slot was successful or not
+    * @param type The type of the slot to be removed.
+    * 
+    * @return If unassigning a slot was successful or not.
     */
-    public static boolean tryRemoveSlot(String type) {
-        if(Loader.instance().getLoaderState() == LoaderState.PREINITIALIZATION && newSlotsRemaining < slotLimit)
-        for(int slotToCheck = 0; slotToCheck < slotsCurrentlyUsed(); slotToCheck++) {
-            if(slots[slotToCheck].equals(type)) {
-                for(int slotToMove = slotToCheck + 1; slotToMove < slotLimit; slotToMove++) {
-                    slots[slotToMove - 1] = slots[slotToMove];
+    public static boolean tryUnassignSlotOfType(String type) {
+        if(newSlotsRemaining < slotLimit && type != null && !type.equals(unknownType) && Loader.instance().getLoaderState() == LoaderState.PREINITIALIZATION) {
+            for(int slotToCheck = slotsCurrentlyUsed(); slotToCheck > 0; slotToCheck--) {
+                if(assignedSlots[slotToCheck].equals(type)) {
+                    for(int slotToMove = slotToCheck + 1; slotToMove < slotLimit; slotToMove++) {
+                        assignedSlots[slotToMove - 1] = assignedSlots[slotToMove];
+                    }
+                    assignedSlots[slotLimit - 1] = unknownType;
+                    newSlotsRemaining++;
+                    return true;
                 }
-                slots[slotLimit - 1] = null;
-                newSlotsRemaining++;
-                return true;
             }
         }
         return false;
     }
 
-    
     /**
-    * Returns the current number of slots with a matching type.
-    * 
-    * @param type  The type of slot being counted
-    * @return      The current total number of matching slots found
-    */
-    public static int totalCurrentSlotsOfType(String type) {
+     * Returns the current number of slots with a matching type.
+     * 
+     * @param type The type of slot being counted.
+     * 
+     * @return The current total number of matching slots found.
+     */
+    public static int totalCurrentlyAssignedSlotsOfType(String type) {
         int total = 0;
-        for(int slotToCheck = 0; slotToCheck < slotLimit; slotToCheck++) {
-            if(slots[slotToCheck].equals(type)) {
-                total++;
+        if(isTypeRegistered(type)) {
+            for(int slotToCheck = 0; slotToCheck < slotLimit; slotToCheck++) {
+                if(assignedSlots[slotToCheck].equals(type)) {
+                    total++;
+                }
             }
         }
         return total;
     }
 
     /**
-    * Returns the number of bauble slots that are currently used.
-    * 
-    * @return      The number of bauble slots currently used
-    */
+     * Returns if the type is registered or not.
+     * 
+     * @param type The type to check the registration of.
+     * 
+     * @return If the type is registered or not.
+     */
+    public static boolean isTypeRegistered(String type) {
+        return registeredTypes.contains(type);
+    }
+
+    /**
+     * Returns the number of bauble slots that are currently used.
+     * 
+     * @return The number of bauble slots currently used.
+     */
     public static int slotsCurrentlyUsed() {
         return slotLimit - newSlotsRemaining;
     }
-    
+
     /**
-    * Returns the number of bauble slots that are currently unused.
-    * 
-    * @return      The number of bauble slots currently unused
-    */
+     * Returns the number of bauble slots that are currently unused.
+     * 
+     * @return The number of bauble slots currently unused.
+     */
     public static int slotsCurrentlyUnused() {
         return newSlotsRemaining;
     }
 
     /**
-    * Returns the type of the specified slot or null if none or out of range.
-    * 
-    * @param slot  The slot to check
-    * @return      The type of the specified slot or "unknown"
-    */
+     * Returns the type of the specified slot, "unknown" if out of range.
+     * 
+     * @param slot The slot to check
+     * @return The type of the specified slot or unknown.
+     */
     public static String getSlotType(int slot) {
         if (slot >= 0 & slot < slotLimit) {
-            return slots[slot];
+            return assignedSlots[slot];
         } else {
             return unknownType;
         }
     }
 
     /**
-    * Returns the type based on the specified BaubleType.
-    * 
-    * @param type  The BaubleType to get a matching type from
-    * @return      The type matching the BaubleType or "unknown"
-    */
+     * Returns the index of a certain type in the registeredType array
+     * or -1 if it cannot be found.
+     * 
+     * @param type The type to get the index of
+     * @return Index of a type or negative one
+     */
+    public static int getIndexOfTypeInRegisteredTypes(String type) {
+        return registeredTypes.indexOf(type);
+    }
+
+    /**
+     * Returns the currently registered bauble types.
+     * If pre-initialization is done this list is effectively final.
+     * 
+     * @return The currently registered bauble types.
+     */
+    public static ArrayList<String> getCurrentlyRegisteredTypes() {
+        return registeredTypes;
+    }
+
+    /**
+     * Returns the current slot assignments as a string array.
+     * If initialization is done this list is effectively final.
+     * 
+     * @return The current contents of the slots array.
+     */
+    public static String[] getCurrentSlotAssignments() {
+        return assignedSlots;
+    }
+
+    /**
+     * Returns a type based on the specified BaubleType.
+     * 
+     * @param type The BaubleType to get a matching type from.
+     * 
+     * @return The type matching the BaubleType or unknown.
+     */
     public static String getTypeFromBaubleType(BaubleType type) {
         switch(type) {
         case RING:
@@ -186,6 +273,55 @@ public class BaubleExpandedSlots {
             return beltType;
         default:
             return unknownType;  
+        }
+    }
+
+    /**
+     * This is only intended to be used by the Baubles manualSlotSelection config option, if it is enabled.
+     * Overrides assigned slots with the contents of a string array.
+     * Any entry that would go over slotLimit is ignored.
+     * If an array is shorter than slotLimit all remaining slots are set to unknown.
+     * Invalid slot types are set to unknown.
+     * 
+     * @param overrideSlots The array to override assigned slots with.
+     */
+    public static void overrideSlots(String[] overrideSlots) {
+        if(Loader.instance().getLoaderState() == LoaderState.INITIALIZATION) {
+            newSlotsRemaining = 0;
+            for(int slot = 0; slot < slotLimit; slot++) {
+                if(slot < overrideSlots.length && isTypeRegistered(overrideSlots[slot])) {
+                    assignedSlots[slot] = overrideSlots[slot];
+                    newSlotsRemaining++;
+                } else {
+                    assignedSlots[slot] = unknownType;
+                }
+            }
+        }
+    }
+
+    private static int newSlotsRemaining;
+    private static String[] assignedSlots = new String[slotLimit];
+    private static ArrayList<String> registeredTypes = new ArrayList<String>();
+    static {
+        registeredTypes.add(unknownType);
+        registeredTypes.add(ringType);
+        registeredTypes.add(amuletType);
+        registeredTypes.add(beltType);
+        registeredTypes.add(headType);
+        registeredTypes.add(bodyType);
+        registeredTypes.add(charmType);
+        registeredTypes.add(capeType);
+        registeredTypes.add(shieldType);
+        registeredTypes.add(quiverType);
+        registeredTypes.add(gauntletType);
+
+        assignedSlots[0] = amuletType;
+        assignedSlots[1] = ringType;
+        assignedSlots[2] = ringType;
+        assignedSlots[3] = beltType;
+        newSlotsRemaining = slotLimit - 4;
+        for(int slot = 4; slot < slotLimit; slot++) {
+            assignedSlots[slot] = unknownType;
         }
     }
 

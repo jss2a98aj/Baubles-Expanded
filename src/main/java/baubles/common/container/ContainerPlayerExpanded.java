@@ -1,25 +1,20 @@
 package baubles.common.container;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryCraftResult;
-import net.minecraft.inventory.InventoryCrafting;
-import net.minecraft.inventory.Slot;
-import net.minecraft.inventory.SlotCrafting;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemArmor;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CraftingManager;
-import net.minecraft.util.IIcon;
-import baubles.api.BaubleType;
 import baubles.api.IBauble;
 import baubles.api.expanded.BaubleExpandedSlots;
 import baubles.api.expanded.IBaubleExpanded;
+import baubles.common.BaublesConfig;
 import baubles.common.lib.PlayerHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.Slot;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemArmor;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
 
 public class ContainerPlayerExpanded extends Container {
     public InventoryBaubles baubles;
@@ -61,11 +56,14 @@ public class ContainerPlayerExpanded extends Container {
         final int slotOffset = 18;
         final int slotStartX = 80;
         final int slotStartY = 8;
-        final int totalBaubleSlots = BaubleExpandedSlots.slotsCurrentlyUsed();
         
         //bauble slots
-        for(i = 0; i < totalBaubleSlots; i++) {
-            addSlotToContainer(new SlotBauble(baubles, BaubleExpandedSlots.getSlotType(i), i, slotStartX + (slotOffset * (i / 4)), slotStartY + (slotOffset * (i % 4))));
+        for(i = 0; i < BaubleExpandedSlots.slotLimit; i++) {
+        	String slotType = BaubleExpandedSlots.getSlotType(i);
+        	if(!BaublesConfig.showUnusedSlots && slotType.equals(BaubleExpandedSlots.unknownType)) {
+        		continue;
+        	}
+            addSlotToContainer(new SlotBauble(baubles, slotType, i, slotStartX + (slotOffset * (i / 4)), slotStartY + (slotOffset * (i % 4))));
         }
 
         //inventory slots
@@ -94,7 +92,7 @@ public class ContainerPlayerExpanded extends Container {
     public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex) {
         ItemStack itemstack = null;
         Slot slot = (Slot)inventorySlots.get(slotIndex);
-        final int totalBaubleSlots = BaubleExpandedSlots.slotsCurrentlyUsed();
+        final int visibleBaubleSlots = BaublesConfig.showUnusedSlots ? BaubleExpandedSlots.slotLimit : BaubleExpandedSlots.slotsCurrentlyUsed();
 
         if (slot != null && slot.getHasStack()) {
             ItemStack itemstack1 = slot.getStack();
@@ -106,8 +104,8 @@ public class ContainerPlayerExpanded extends Container {
                 if (!mergeItemStack(itemstack1, j, j + 1, false)) {
                     return null;
                 }
-            } else if (slotIndex >= 4 + totalBaubleSlots && item instanceof IBauble && ((IBauble)item).canEquip(itemstack, thePlayer)) {
-                for(int baubleSlot = 4; baubleSlot < 4 + totalBaubleSlots; baubleSlot++) {
+            } else if (slotIndex >= 4 + visibleBaubleSlots && item instanceof IBauble && ((IBauble)item).canEquip(itemstack, thePlayer)) {
+                for(int baubleSlot = 4; baubleSlot < 4 + visibleBaubleSlots; baubleSlot++) {
                 	if(!((Slot)inventorySlots.get(baubleSlot)).getHasStack()) {
                 		String[] types;
                 		if(item instanceof IBaubleExpanded) {
@@ -122,15 +120,15 @@ public class ContainerPlayerExpanded extends Container {
                 		}
                 	}
                 }
-            } else if (slotIndex >= 4 + totalBaubleSlots && slotIndex < 31 + totalBaubleSlots) {
-                if (!mergeItemStack(itemstack1, 31 + totalBaubleSlots, 40 + totalBaubleSlots, false)) {
+            } else if (slotIndex >= 4 + visibleBaubleSlots && slotIndex < 31 + visibleBaubleSlots) {
+                if (!mergeItemStack(itemstack1, 31 + visibleBaubleSlots, 40 + visibleBaubleSlots, false)) {
                     return null;
                 }
-            } else if (slotIndex >= 31 + totalBaubleSlots && slotIndex < 40 + totalBaubleSlots) {
-                if (!mergeItemStack(itemstack1, 4 + totalBaubleSlots, 31 + totalBaubleSlots, false)) {
+            } else if (slotIndex >= 31 + visibleBaubleSlots && slotIndex < 40 + visibleBaubleSlots) {
+                if (!mergeItemStack(itemstack1, 4 + visibleBaubleSlots, 31 + visibleBaubleSlots, false)) {
                     return null;
                 }
-            } else if (!mergeItemStack(itemstack1, 4 + totalBaubleSlots, 40 + totalBaubleSlots, false, slot)) {
+            } else if (!mergeItemStack(itemstack1, 4 + visibleBaubleSlots, 40 + visibleBaubleSlots, false, slot)) {
                 return null;
             }
 

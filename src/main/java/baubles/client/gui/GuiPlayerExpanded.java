@@ -1,5 +1,12 @@
 package baubles.client.gui;
 
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
+
+import baubles.api.expanded.BaubleExpandedSlots;
+import baubles.common.Baubles;
+import baubles.common.BaublesConfig;
+import baubles.common.container.ContainerPlayerExpanded;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.achievement.GuiAchievements;
 import net.minecraft.client.gui.achievement.GuiStats;
@@ -7,18 +14,10 @@ import net.minecraft.client.renderer.InventoryEffectRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.util.ResourceLocation;
-
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
-
-import baubles.api.expanded.BaubleExpandedSlots;
-import baubles.common.Baubles;
-import baubles.common.container.ContainerPlayerExpanded;
 
 public class GuiPlayerExpanded extends InventoryEffectRenderer {
 
@@ -73,8 +72,8 @@ public class GuiPlayerExpanded extends InventoryEffectRenderer {
         mc.getTextureManager().bindTexture(background);
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, this.xSize, this.ySize);
 
-        for (int i1 = 4; i1 < BaubleExpandedSlots.slotsCurrentlyUsed() + 4; ++i1) {
-            Slot slot = (Slot)this.inventorySlots.inventorySlots.get(i1);
+        for (int slotIndex = 4; slotIndex < (BaublesConfig.showUnusedSlots ? BaubleExpandedSlots.slotLimit : BaubleExpandedSlots.slotsCurrentlyUsed()) + 4; slotIndex++) {
+            Slot slot = (Slot)this.inventorySlots.inventorySlots.get(slotIndex);
             drawTexturedModalRect(guiLeft + slot.xDisplayPosition - 1, guiTop + slot.yDisplayPosition - 1, 200, 0, 18, 18);
         }
         drawPlayerModel(guiLeft + 51, guiTop + 75, 30, (float)(guiLeft + 51) - this.xSizeFloat, (float)(guiTop + 75 - 50) - this.ySizeFloat, this.mc.thePlayer);

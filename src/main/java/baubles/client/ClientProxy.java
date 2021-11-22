@@ -1,10 +1,6 @@
 
 package baubles.client;
 
-import net.minecraft.client.multiplayer.WorldClient;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.world.World;
-import net.minecraftforge.common.MinecraftForge;
 import baubles.client.gui.GuiEvents;
 import baubles.client.gui.GuiPlayerExpanded;
 import baubles.common.Baubles;
@@ -12,6 +8,10 @@ import baubles.common.CommonProxy;
 import baubles.common.event.KeyHandler;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
+import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 
 public class ClientProxy extends CommonProxy {
 	

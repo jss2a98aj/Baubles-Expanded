@@ -1,19 +1,18 @@
 package baubles.common.network;
 
-import io.netty.buffer.ByteBuf;
-
 import java.io.IOException;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.world.World;
 import baubles.common.Baubles;
 import baubles.common.lib.PlayerHandler;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.World;
 
 public class PacketSyncBauble implements IMessage, IMessageHandler<PacketSyncBauble, IMessage> {
 	
