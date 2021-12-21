@@ -28,7 +28,7 @@ public class Baubles {
 
     public static final String MODID = "Baubles";
     public static final String MODNAME = "Baubles";
-    public static final String VERSION = "GRADLETOKEN_VERSION";
+    public static final String VERSION = "2.0.3";
 
     @SidedProxy(clientSide = "baubles.client.ClientProxy", serverSide = "baubles.common.CommonProxy")
     public static CommonProxy proxy;
