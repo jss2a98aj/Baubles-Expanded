@@ -2,8 +2,6 @@ package baubles.common;
 
 import java.util.List;
 
-import org.lwjgl.input.Keyboard;
-
 import baubles.api.BaubleType;
 import baubles.api.expanded.BaubleExpandedSlots;
 import baubles.api.expanded.IBaubleExpanded;
@@ -84,7 +82,7 @@ public class ItemDebugger extends Item implements IBaubleExpanded {
 				tooltip.add(type);
 			}
 		} else {
-			tooltip.add(StatCollector.translateToLocal("tooltip.shiftprompt").replaceAll("%key%", Keyboard.getKeyName(42)));
+			tooltip.add(StatCollector.translateToLocal("tooltip.shiftprompt"));
 		}
 	}
 

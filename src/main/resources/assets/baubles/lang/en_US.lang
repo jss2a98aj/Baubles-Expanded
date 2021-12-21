@@ -11,7 +11,7 @@ keybind.baublesinventory=Baubles Inventory
 #
 # Tooltips
 tooltip.compatibleslots=Equippable in the following Bauble slots:
-tooltip.shiftprompt=Hold §b%key%§7 for more info.
+tooltip.shiftprompt=Hold §bSHIFT§7 for more info.
 #
 # Slots
 slot.amulet=§aAmulet§7
