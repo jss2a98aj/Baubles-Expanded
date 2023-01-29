@@ -8,6 +8,7 @@ import baubles.api.IBauble;
 import baubles.api.expanded.BaubleExpandedSlots;
 import baubles.api.expanded.IBaubleExpanded;
 import baubles.common.Baubles;
+import baubles.common.lib.ItemStackHelper;
 import baubles.common.network.PacketHandler;
 import baubles.common.network.PacketSyncBauble;
 import net.minecraft.entity.Entity;
@@ -275,7 +276,7 @@ public class InventoryBaubles implements IInventory {
 
 	public void dropItemsAt(ArrayList<EntityItem> drops, Entity entity) {
 		for (int slot = 0; slot < stackList.length; ++slot) {
-			if (stackList[slot] != null) {
+			if (stackList[slot] != null && !ItemStackHelper.isSoulBound(stackList[slot])) {
 				EntityItem item = new EntityItem(entity.worldObj,
 						entity.posX, entity.posY + entity.getEyeHeight(), entity.posZ,
 						stackList[slot].copy());
