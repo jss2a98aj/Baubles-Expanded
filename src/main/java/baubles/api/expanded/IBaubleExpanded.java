@@ -5,7 +5,7 @@ import net.minecraft.item.ItemStack;
 
 /**
  * This interface should be extended by items that can be worn in bauble slots.
- * Supports multiple original and expanded slot types.
+ * Supports all original and several expanded slot types.
  * 
  * @author jss2a98aj
  */

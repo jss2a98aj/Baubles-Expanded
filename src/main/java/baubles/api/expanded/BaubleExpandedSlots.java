@@ -88,9 +88,9 @@ public class BaubleExpandedSlots {
 	 * loader state is not pre-initialization.
 	 * 
 	 * @param type The type of the slot to evaluate and possibly unassign.
-	 * @param minumumOfType The minimum slots of type to be assigned.
+	 * @param maximumOfType The maximum slots of type to be left assigned.
 	 * 
-	 * @return If the total assigned slots of the specified type equals or is less then the maximum.
+	 * @return If the total assigned slots of the specified type equals or is less than the maximum.
 	 */
 	public static boolean tryUnassignSlotsDownToMaximum(String type, int maximumOfType) {
 		if(maximumOfType < 0) maximumOfType = 0;
