@@ -16,7 +16,7 @@ public class BaubleExpandedSlots {
 	//The type used in place of null.
 	public static final String unknownType = "unknown";
 
-	//Ppre-registered types.
+	//Pre-registered types.
 	public static final String ringType = "ring";
 	public static final String amuletType = "amulet";
 	public static final String beltType = "belt";
@@ -311,11 +311,11 @@ public class BaubleExpandedSlots {
 		if(Loader.instance().getLoaderState() == LoaderState.INITIALIZATION) {
 			newSlotsRemaining = 0;
 			for(int slot = 0; slot < slotLimit; slot++) {
-				if(slot < overrideSlots.length && isTypeRegistered(overrideSlots[slot])) {
+				if(slot < overrideSlots.length && isTypeRegistered(overrideSlots[slot]) && !overrideSlots[slot].equals(unknownType)) {
 					assignedSlots[slot] = overrideSlots[slot];
-					newSlotsRemaining++;
 				} else {
 					assignedSlots[slot] = unknownType;
+					newSlotsRemaining++;
 				}
 			}
 		}
