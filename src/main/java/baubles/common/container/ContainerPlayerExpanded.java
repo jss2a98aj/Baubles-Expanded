@@ -60,10 +60,9 @@ public class ContainerPlayerExpanded extends Container {
         //bauble slots
         for(i = 0; i < BaubleExpandedSlots.slotLimit; i++) {
         	String slotType = BaubleExpandedSlots.getSlotType(i);
-        	if(!BaublesConfig.showUnusedSlots && slotType.equals(BaubleExpandedSlots.unknownType)) {
-        		continue;
+        	if(BaublesConfig.showUnusedSlots || !slotType.equals(BaubleExpandedSlots.unknownType)) {
+                addSlotToContainer(new SlotBauble(baubles, slotType, i, slotStartX + (slotOffset * (i / 4)), slotStartY + (slotOffset * (i % 4))));
         	}
-            addSlotToContainer(new SlotBauble(baubles, slotType, i, slotStartX + (slotOffset * (i / 4)), slotStartY + (slotOffset * (i % 4))));
         }
 
         //inventory slots

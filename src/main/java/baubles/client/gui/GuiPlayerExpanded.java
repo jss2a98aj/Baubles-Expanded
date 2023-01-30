@@ -24,7 +24,7 @@ public class GuiPlayerExpanded extends InventoryEffectRenderer {
 	public static final ResourceLocation background = new ResourceLocation("baubles","textures/gui/bauble_inventory.png");
 
 	/**
-     * x size of the inventory window in pixels. Defined as  float, passed as int
+     * x size of the inventory window in pixels. Defined as  float, passed as int.
      */
     private float xSizeFloat;
     /**
@@ -34,7 +34,7 @@ public class GuiPlayerExpanded extends InventoryEffectRenderer {
 
     public GuiPlayerExpanded(EntityPlayer player) {
         super(new ContainerPlayerExpanded(player.inventory, !player.worldObj.isRemote, player));
-        this.allowUserInput = true;
+        allowUserInput = true;
     }
 
     /**
@@ -52,7 +52,7 @@ public class GuiPlayerExpanded extends InventoryEffectRenderer {
      */
     @Override
     public void initGui() {
-        this.buttonList.clear();
+        buttonList.clear();
         super.initGui();
     }
 
@@ -70,13 +70,21 @@ public class GuiPlayerExpanded extends InventoryEffectRenderer {
     protected void drawGuiContainerBackgroundLayer(float p_146976_1_, int p_146976_2_, int p_146976_3_) {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         mc.getTextureManager().bindTexture(background);
-        drawTexturedModalRect(guiLeft, guiTop, 0, 0, this.xSize, this.ySize);
+        drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 
-        for (int slotIndex = 4; slotIndex < (BaublesConfig.showUnusedSlots ? BaubleExpandedSlots.slotLimit : BaubleExpandedSlots.slotsCurrentlyUsed()) + 4; slotIndex++) {
-            Slot slot = (Slot)this.inventorySlots.inventorySlots.get(slotIndex);
-            drawTexturedModalRect(guiLeft + slot.xDisplayPosition - 1, guiTop + slot.yDisplayPosition - 1, 200, 0, 18, 18);
+        final int slotOffset = 18;
+        final int slotStartX = guiLeft + 79;
+        final int slotStartY = guiTop + 7;
+
+        //bauble slot backgrounds
+        for (int slotIndex = 0; slotIndex < BaubleExpandedSlots.slotLimit; slotIndex++) {
+            String slotType = BaubleExpandedSlots.getSlotType(slotIndex);
+            if(BaublesConfig.showUnusedSlots || !slotType.equals(BaubleExpandedSlots.unknownType)) {
+                //Slot slot = (Slot)inventorySlots.inventorySlots.get(slotIndex + 4);
+                drawTexturedModalRect(slotStartX + (slotOffset * (slotIndex / 4)), slotStartY + (slotOffset * (slotIndex % 4)), 200, 0, 18, 18);
+            }
         }
-        drawPlayerModel(guiLeft + 51, guiTop + 75, 30, (float)(guiLeft + 51) - this.xSizeFloat, (float)(guiTop + 75 - 50) - this.ySizeFloat, this.mc.thePlayer);
+        drawPlayerModel(guiLeft + 51, guiTop + 75, 30, (float)(guiLeft + 51) - xSizeFloat, (float)(guiTop + 25) - ySizeFloat, mc.thePlayer);
     }
 
     public static void drawPlayerModel(int x, int y, int scale, float yaw, float pitch, EntityLivingBase playerdrawn) {
@@ -118,16 +126,16 @@ public class GuiPlayerExpanded extends InventoryEffectRenderer {
     @Override
     protected void actionPerformed(GuiButton button) {
         if (button.id == 0) {
-            this.mc.displayGuiScreen(new GuiAchievements(this, this.mc.thePlayer.getStatFileWriter()));
+            mc.displayGuiScreen(new GuiAchievements(this, mc.thePlayer.getStatFileWriter()));
         } else if (button.id == 1) {
-            this.mc.displayGuiScreen(new GuiStats(this, this.mc.thePlayer.getStatFileWriter()));
+            mc.displayGuiScreen(new GuiStats(this, mc.thePlayer.getStatFileWriter()));
         }
     }
 
 	@Override
 	protected void keyTyped(char par1, int keyCode) {
 		if (keyCode == Baubles.proxy.keyHandler.key.getKeyCode()) {
-            this.mc.thePlayer.closeScreen();
+            mc.thePlayer.closeScreen();
         } else {
         	super.keyTyped(par1, keyCode);
         }
