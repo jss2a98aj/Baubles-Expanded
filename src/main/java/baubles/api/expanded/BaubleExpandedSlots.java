@@ -184,7 +184,7 @@ public class BaubleExpandedSlots {
 	}
 
 	/**
-	 * Returns an array of slot indexis that have the specified type assigned.
+	 * Returns an array of slot indexes that have the specified type assigned.
 	 * Do not treat results from this as final until postinit or later.
 	 * 
 	 * @param type The type of slot being checked.
