@@ -1,8 +1,8 @@
 package thaumcraft.codechicken.core.launch;
+
 import cpw.mods.fml.relauncher.IFMLCallHook;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import java.util.Map;
-
 
 public class DepLoader implements IFMLLoadingPlugin, IFMLCallHook {
 
