@@ -60,43 +60,35 @@ public class EventHandlerEntity {
 	private void playerLoadDo(EntityPlayer player, File directory, Boolean gamemode) {
 		PlayerHandler.clearPlayerBaubles(player);
 		
-		File file1, file2;
-		String fileName, fileNameBackup;
-		fileName = "baub";
-		fileNameBackup = "baubback";
+		File mainFile, backupFile;
+		final String fileExtension = "baub";
+		final String fileExtensionBackup = "baubback";
 		
 		// look for normal files first
-		file1 = getPlayerFile(fileName, directory, player.getCommandSenderName());
-		file2 = getPlayerFile(fileNameBackup, directory, player.getCommandSenderName());
+		mainFile = getPlayerFile(fileExtension, directory, player.getCommandSenderName());
+		backupFile = getPlayerFile(fileExtensionBackup, directory, player.getCommandSenderName());
 		
 		// look for uuid files when normal file missing
-		if (!file1.exists()) {
-			File filep = getPlayerFileUUID(fileName, directory, player.getGameProfile().getId().toString());
+		if (!mainFile.exists()) {
+			File filep = getPlayerFile(fileExtension, directory, player.getGameProfile().getId().toString());
 			if (filep.exists()) {
 				try {
-					Files.copy(filep, file1);					
-					Baubles.log.info("Using and converting UUID Baubles savefile for "+player.getCommandSenderName());
+					Files.copy(filep, mainFile);
+					Baubles.log.info("Using and converting UUID Baubles savefile for " + player.getCommandSenderName());
 					filep.delete();
-					File fb = getPlayerFileUUID(fileNameBackup, directory, player.getGameProfile().getId().toString());
+					File fb = getPlayerFile(fileExtensionBackup, directory, player.getGameProfile().getId().toString());
 					if (fb.exists()) fb.delete();					
 				} catch (IOException e) {}
 			}
 		}
-		
-		PlayerHandler.loadPlayerBaubles(player, file1, file2);
+
+		PlayerHandler.loadPlayerBaubles(player, mainFile, backupFile);
 		EventHandlerNetwork.syncBaubles(player);
 	}
 	
-	public File getPlayerFile(String suffix, File playerDirectory, String playername)
-    {
-        if ("dat".equals(suffix)) throw new IllegalArgumentException("The suffix 'dat' is reserved");
-        return new File(playerDirectory, playername+"."+suffix);
-    }
-	
-	public File getPlayerFileUUID(String suffix, File playerDirectory, String playerUUID)
-    {
-        if ("dat".equals(suffix)) throw new IllegalArgumentException("The suffix 'dat' is reserved");
-        return new File(playerDirectory, playerUUID+"."+suffix);
+	public File getPlayerFile(String extension, File playerDirectory, String playerName) {
+        if("dat".equals(extension)) throw new IllegalArgumentException("The extension 'dat' is reserved");
+        return new File(playerDirectory, playerName + "." + extension);
     }
 
 	@SubscribeEvent
