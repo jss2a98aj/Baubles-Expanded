@@ -54,20 +54,20 @@ public class BaubleExpandedSlots {
 	 * assigned slots cannot be met, or the loader state is not pre-initialization.
 	 * 
 	 * @param type The type of the slot to evaluate and possibly assign.
-	 * @param minumumOfType The minimum slots of type to be assigned.
+	 * @param minimumOfType The minimum slots of type to be assigned.
 	 * 
 	 * @return If the total assigned slots of the specified type equals or is more than the minimum.
 	 */
-	public static boolean tryAssignSlotsUpToMinimum(String type, int minumumOfType) {
-		if(minumumOfType >= 1 && isTypeRegistered(type) && !type.equals(unknownType) && Loader.instance().getLoaderState() == LoaderState.PREINITIALIZATION) {
+	public static boolean tryAssignSlotsUpToMinimum(String type, int minimumOfType) {
+		if(minimumOfType >= 1 && isTypeRegistered(type) && !type.equals(unknownType) && Loader.instance().getLoaderState() == LoaderState.PREINITIALIZATION) {
 			int total = 0;
 			for(int slotToCheck = 0; slotToCheck < slotLimit; slotToCheck++) {
 				if(assignedSlots[slotToCheck].equals(type)) {
 					total++;
 				}
 			}
-			if(total < minumumOfType) {
-				total = minumumOfType - total;
+			if(total < minimumOfType) {
+				total = minimumOfType - total;
 				for(int i = 0; i < total; i++) {
 					if(newSlotsRemaining >= 1) {
 						assignedSlots[slotLimit - newSlotsRemaining] = type;
