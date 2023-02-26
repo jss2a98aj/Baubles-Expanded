@@ -14,6 +14,9 @@ public class BaubleExpandedSlots {
 	public static final int slotLimit = 20;
 
 	//The type used in place of null.
+	public static final String invalidType = "";
+
+	//The type used for unassigned slots.
 	public static final String unknownType = "unknown";
 
 	//Pre-registered types.
@@ -286,6 +289,9 @@ public class BaubleExpandedSlots {
 	 * @return The type matching the BaubleType or unknown.
 	 */
 	public static String getTypeFromBaubleType(BaubleType type) {
+		if(type == null) {
+			return invalidType;
+		}
 		switch(type) {
 		case RING:
 			return ringType;
