@@ -30,6 +30,8 @@ public class BaubleExpandedSlots {
 	public static final String shieldType = "shield";
 	public static final String quiverType = "quiver";
 	public static final String gauntletType = "gauntlet";
+	public static final String earringType = "earring";
+	public static final String wingsType = "wings";
 
 	/**
 	 * Registers a type and returns true if the type could be or has been registered.
@@ -342,6 +344,8 @@ public class BaubleExpandedSlots {
 		registeredTypes.add(shieldType);
 		registeredTypes.add(quiverType);
 		registeredTypes.add(gauntletType);
+		registeredTypes.add(earringType);
+		registeredTypes.add(wingsType);
 
 		assignedSlots[0] = amuletType;
 		assignedSlots[1] = ringType;
