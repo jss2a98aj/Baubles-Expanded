@@ -4,10 +4,10 @@ import java.util.List;
 
 import baubles.api.BaubleType;
 import baubles.api.expanded.BaubleExpandedSlots;
+import baubles.api.expanded.BaubleItemHelper;
 import baubles.api.expanded.IBaubleExpanded;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
@@ -15,7 +15,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
-import net.minecraft.util.StatCollector;
 
 public class ItemDebugger extends Item implements IBaubleExpanded {
 
@@ -28,7 +27,7 @@ public class ItemDebugger extends Item implements IBaubleExpanded {
 
 	@SideOnly(Side.CLIENT)
 	private IIcon[] icons;
-	
+
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void registerIcons(IIconRegister ir) {
@@ -72,18 +71,7 @@ public class ItemDebugger extends Item implements IBaubleExpanded {
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean debug) {
-		if(GuiScreen.isShiftKeyDown()) {
-			tooltip.add(StatCollector.translateToLocal("tooltip.compatibleslots"));
-
-			String[] types = getBaubleTypes(stack);
-			for(int i = 0; i < types.length; i++) {
-				String type = StatCollector.translateToLocal("slot." + types[i]);
-				if(i < types.length - 1) type += ",";
-				tooltip.add(type);
-			}
-		} else {
-			tooltip.add(StatCollector.translateToLocal("tooltip.shiftprompt"));
-		}
+        BaubleItemHelper.addSlotInformation(tooltip, getBaubleTypes(stack));
 	}
 
 	@Override
@@ -117,7 +105,7 @@ public class ItemDebugger extends Item implements IBaubleExpanded {
 	public boolean canUnequip(ItemStack itemStack, EntityLivingBase player) {
 	  return true;
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	public IIcon getBackgroundIconForSlotType(String type) {
 		if(type != null && BaubleExpandedSlots.isTypeRegistered(type)) {
