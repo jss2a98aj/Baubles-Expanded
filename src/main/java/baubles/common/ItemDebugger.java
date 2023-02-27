@@ -15,6 +15,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
+import net.minecraft.world.World;
 
 public class ItemDebugger extends Item implements IBaubleExpanded {
 
@@ -43,6 +44,7 @@ public class ItemDebugger extends Item implements IBaubleExpanded {
 		return icons[meta >= icons.length ? 0 : meta];
 	}
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void getSubItems(Item item, CreativeTabs tab, List list) {
@@ -50,6 +52,11 @@ public class ItemDebugger extends Item implements IBaubleExpanded {
 			list.add(new ItemStack(this, 1, i));
 		}
 	}
+
+    @Override
+    public ItemStack onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer player) {
+        return BaubleItemHelper.onBaubleRightClick(itemStackIn, worldIn, player);
+    }
 
 	@Override
 	public String[] getBaubleTypes(ItemStack itemStack) {
@@ -68,6 +75,7 @@ public class ItemDebugger extends Item implements IBaubleExpanded {
 	  return null;
 	}
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean debug) {
@@ -82,11 +90,6 @@ public class ItemDebugger extends Item implements IBaubleExpanded {
 	public boolean hasEffect(ItemStack itemStack, int a) {
 	  return true;
 	}
-
-	/*@Override
-	public String getUnlocalizedName(ItemStack itemStack) {
-	  return super.getUnlocalizedName() + "." + itemStack.getItemDamage();
-	}*/
 
 	@Override
 	public void onEquipped(ItemStack itemStack, EntityLivingBase player) {
