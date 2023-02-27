@@ -15,7 +15,7 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public class PlayerHandler {
 
-	private static HashMap<String, InventoryBaubles> playerBaubles = new HashMap<String, InventoryBaubles>();
+	private static HashMap<String, InventoryBaubles> playerBaubles = new HashMap<>();
 
 	public static void clearPlayerBaubles(EntityPlayer player) {
 		playerBaubles.remove(player.getCommandSenderName());
@@ -107,7 +107,7 @@ public class PlayerHandler {
 					if (mainFile.exists()) {
 						try {
 							mainFile.delete();
-						} catch (Exception deleteException) {
+						} catch (Exception ignored) {
 						}
 					}
 				}

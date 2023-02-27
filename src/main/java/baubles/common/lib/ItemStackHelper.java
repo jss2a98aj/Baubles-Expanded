@@ -11,9 +11,9 @@ public class ItemStackHelper {
             NBTTagList enchantments = itemStack.getEnchantmentTagList();
             if(enchantments != null) {
                 for(int i = 0; i < enchantments.tagCount(); i++) {
-                    int itemEnchID = enchantments.getCompoundTagAt(i).getInteger("id");
+                    int itemEnchantID = enchantments.getCompoundTagAt(i).getInteger("id");
                     for(int soulBoundID : BaublesConfig.soulBoundEnchantments) {
-                        if(itemEnchID == soulBoundID) {
+                        if(itemEnchantID == soulBoundID) {
                             return true;
                         }
                     }

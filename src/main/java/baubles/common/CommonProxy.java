@@ -10,11 +10,11 @@ import net.minecraft.world.World;
 
 
 public class CommonProxy implements IGuiHandler {
-	
+
 	public KeyHandler keyHandler;
-	
+
 	public void registerHandlers() {}
-	
+
 
 	@Override
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
@@ -23,17 +23,17 @@ public class CommonProxy implements IGuiHandler {
 
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-		switch (ID) {
-			case Baubles.GUI: return new ContainerPlayerExpanded(player.inventory, !world.isRemote, player);
-		}
+        if(ID == Baubles.GUI) {
+            return new ContainerPlayerExpanded(player.inventory, !world.isRemote, player);
+        }
 		return null;
 	}
 
 	public World getClientWorld() {
 		return null;
 	}
-		
-	
+
+
 	public void registerKeyBindings() {}
 
 }
