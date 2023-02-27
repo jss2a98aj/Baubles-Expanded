@@ -56,7 +56,7 @@ public class BaubleItemHelper {
                 if(!worldIn.isRemote) {
                     baubles.setInventorySlotContents(slotIndex, itemStackIn.copy());
                     if(!player.capabilities.isCreativeMode) {
-                        itemStackIn.stackSize--;
+                        itemStackIn.stackSize = 0;
                         //Work around the event being fired twice in single player before the return stack is set.
                         player.inventory.setInventorySlotContents(player.inventory.currentItem, itemStackIn);
                     }
