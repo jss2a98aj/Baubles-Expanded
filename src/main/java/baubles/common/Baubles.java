@@ -10,8 +10,6 @@ import baubles.common.event.EventHandlerNetwork;
 import baubles.common.network.PacketHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -27,13 +25,13 @@ import net.minecraftforge.common.config.Configuration;
 public class Baubles {
 
     public static final String MODID = "Baubles";
-    public static final String MODNAME = "Baubles Expanded";
-    public static final String VERSION = "2.0.6";
+    public static final String MODNAME = "Baubles Backwards Compat";
+    public static final String VERSION = "GRADLETOKEN_VERSION";
 
     @SidedProxy(clientSide = "baubles.client.ClientProxy", serverSide = "baubles.common.CommonProxy")
     public static CommonProxy proxy;
 
-    @Instance(value=Baubles.MODID)
+    @Mod.Instance(value=Baubles.MODID)
     public static Baubles instance;
 
     public EventHandlerEntity entityEventHandler;
@@ -44,9 +42,9 @@ public class Baubles {
 
     public static final Item itemDebugger = new ItemDebugger().setUnlocalizedName("baubleSlotDebugTool");
 
-    @EventHandler
+    @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        event.getModMetadata().version = Baubles.VERSION;
+        event.getModMetadata().parent = BaublesExpanded.MODID;
 
         PacketHandler.init();
 
@@ -58,7 +56,7 @@ public class Baubles {
         proxy.registerHandlers();
     }
 
-    @EventHandler
+    @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         //This config is intentionally loaded later than normal.
         BaublesConfig.loadConfig(new Configuration(new File(Launch.minecraftHome, "config" + File.separator + "baubles.cfg")));
