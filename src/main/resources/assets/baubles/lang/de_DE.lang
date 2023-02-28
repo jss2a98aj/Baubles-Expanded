@@ -1,0 +1,33 @@
+#
+# Items
+item.baubleSlotDebugTool.name=Bauble Slot Debug-Tool
+#
+# GUI
+button.baubles=Baubles
+button.normal=Normal
+#
+# Keybinding
+keybind.baublesinventory=Baubles-Inventar
+#
+# Tooltips
+tooltip.compatibleslots=Ausrüstbar in den folgenden Slots:
+tooltip.shiftprompt=§bSHIFT§7 gedrückt halten für mehr Informationen.
+#
+# Slots
+slot.amulet=§aAmulett§7
+slot.belt=§aGürtel§7
+slot.body=§aKörper§7
+slot.boots=§aStiefel§7
+slot.cape=§aCape§7
+slot.charm=§aTalisman§7
+slot.chestplate=§aBrustpanzer§7
+slot.earring=§aOhrring§7
+slot.gauntlet=§aHandschuh§7
+slot.head=§aKopf§7
+slot.helmet=§aHelm§7
+slot.leggings=§aBeinschutz§7
+slot.quiver=§aKöcher§7
+slot.ring=§aRing§7
+slot.shield=§aSchild§7
+slot.unknown=§aUnbekannt§7
+slot.wings=§aFlügel§7
