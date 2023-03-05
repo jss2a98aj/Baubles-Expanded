@@ -1,4 +1,33 @@
 #
+# Items
+item.baubleSlotDebugTool.name=飾品插槽調試工具
+#
 # GUI
 button.baubles=飾品裝備欄
-button.normal=一般裝備欄
+button.normal=般裝備欄
+#
+# Keybinding
+keybind.baublesinventory=飾品道具欄
+#
+# Tooltips
+tooltip.compatibleslots=裝備在這些插槽:
+tooltip.shiftprompt=安上 §bSHIFT§7 為更多信息.
+#
+# Slots
+slot.amulet=§a護身符§7
+slot.belt=§a皮帶§7
+slot.body=§a身體§7
+slot.boots=§a靴子§7
+slot.cape=§a披肩§7
+slot.charm=§a符咒§7
+slot.chestplate=§a胸甲§7
+slot.earring=§a耳環§7
+slot.gauntlet=§a護手§7
+slot.head=§a頭§7
+slot.helmet=§a頭盔§7
+slot.leggings=§a護腿§7
+slot.quiver=§a箭筒§7
+slot.ring=§a戒指§7
+slot.shield=§a盾牌§7
+slot.unknown=§a无名§7
+slot.wings=§a翅膀§7
