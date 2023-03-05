@@ -4,7 +4,7 @@ item.baubleSlotDebugTool.name=飾品插槽調試工具
 #
 # GUI
 button.baubles=飾品裝備欄
-button.normal=般裝備欄
+button.normal=普通裝備欄
 #
 # Keybinding
 keybind.baublesinventory=飾品道具欄
