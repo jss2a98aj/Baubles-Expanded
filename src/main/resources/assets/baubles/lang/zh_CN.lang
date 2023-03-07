@@ -3,8 +3,8 @@
 item.baubleSlotDebugTool.name=饰品插槽调试工具
 #
 # GUI
-button.baubles=饰品栏
-button.normal=普通栏
+button.baubles=饰品
+button.normal=普通
 #
 # Keybinding
 keybind.baublesinventory=饰品栏
