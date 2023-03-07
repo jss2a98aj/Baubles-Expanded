@@ -11,7 +11,7 @@ keybind.baublesinventory=饰品栏
 #
 # Tooltips
 tooltip.compatibleslots=装备在这些插槽:
-tooltip.shiftprompt=按 §bSHIFT§7 以显示更多信息
+tooltip.shiftprompt=按住 §bSHIFT§7 以显示更多信息
 #
 # Slots
 slot.amulet=§a护身符§7
