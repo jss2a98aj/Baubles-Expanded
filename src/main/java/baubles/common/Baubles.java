@@ -58,7 +58,7 @@ public class Baubles {
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         //This config is intentionally loaded later than normal.
-        BaublesConfig.loadConfig(new Configuration(new File(Launch.minecraftHome, "config" + File.separator + "baubles.cfg")));
+        BaublesConfig.loadConfig(new Configuration(new File(Launch.minecraftHome, "config" + File.separator + "Baubles.cfg")));
 
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, proxy);
           proxy.registerKeyBindings();
