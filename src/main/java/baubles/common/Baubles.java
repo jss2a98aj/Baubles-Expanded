@@ -21,11 +21,10 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 
 @Mod(modid = Baubles.MODID, name = Baubles.MODNAME, version = Baubles.VERSION)
-
 public class Baubles {
 
     public static final String MODID = "Baubles";
-    public static final String MODNAME = "Baubles Backwards Compat";
+    public static final String MODNAME = "Baubles";
     public static final String VERSION = "GRADLETOKEN_VERSION";
 
     @SidedProxy(clientSide = "baubles.client.ClientProxy", serverSide = "baubles.common.CommonProxy")
@@ -59,7 +58,7 @@ public class Baubles {
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         //This config is intentionally loaded later than normal.
-        BaublesConfig.loadConfig(new Configuration(new File(Launch.minecraftHome, "config" + File.separator + "baubles.cfg")));
+        BaublesConfig.loadConfig(new Configuration(new File(Launch.minecraftHome, "config" + File.separator + "Baubles.cfg")));
 
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, proxy);
           proxy.registerKeyBindings();

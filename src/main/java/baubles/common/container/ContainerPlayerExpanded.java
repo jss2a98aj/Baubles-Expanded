@@ -44,7 +44,7 @@ public class ContainerPlayerExpanded extends Container {
                     if (itemStack == null) return false;
                     return itemStack.getItem().isValidArmor(itemStack, k, thePlayer);
                 }
-                
+
                 @Override
                 @SideOnly(Side.CLIENT)
                 public IIcon getBackgroundIconIndex() {
@@ -56,7 +56,7 @@ public class ContainerPlayerExpanded extends Container {
         final int slotOffset = 18;
         final int slotStartX = 80;
         final int slotStartY = 8;
-        
+
         //bauble slots
         for(i = 0; i < BaubleExpandedSlots.slotLimit; i++) {
         	String slotType = BaubleExpandedSlots.getSlotType(i);
@@ -76,7 +76,7 @@ public class ContainerPlayerExpanded extends Container {
         for (i = 0; i < 9; ++i) {
             addSlotToContainer(new Slot(playerInv, i, slotStartY + i * slotOffset, 142));
         }
-        
+
     }
 
     @Override
@@ -89,64 +89,67 @@ public class ContainerPlayerExpanded extends Container {
      */
     @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex) {
-        ItemStack itemstack = null;
+        ItemStack returnStack = null;
         Slot slot = (Slot)inventorySlots.get(slotIndex);
         final int visibleBaubleSlots = BaublesConfig.showUnusedSlots ? BaubleExpandedSlots.slotLimit : BaubleExpandedSlots.slotsCurrentlyUsed();
 
-        if (slot != null && slot.getHasStack()) {
-            ItemStack itemstack1 = slot.getStack();
-            itemstack = itemstack1.copy();
-            Item item = itemstack.getItem();
-            
-            if (item instanceof ItemArmor && !((Slot)inventorySlots.get(((ItemArmor)item).armorType)).getHasStack()) {
-                int j = ((ItemArmor)item).armorType;
-                if (!mergeItemStack(itemstack1, j, j + 1, false)) {
-                    return null;
+        if(slot != null && slot.getHasStack()) {
+            ItemStack originalStack = slot.getStack();
+            returnStack = originalStack.copy();
+            Item item = returnStack.getItem();
+
+            if(item instanceof ItemArmor && !((Slot)inventorySlots.get(((ItemArmor)item).armorType)).getHasStack()) {
+                int armorSlot = ((ItemArmor)item).armorType;
+                if(!mergeItemStack(originalStack, armorSlot, armorSlot + 1, false)) {
+                    returnStack = null;
                 }
-            } else if (slotIndex >= 4 + visibleBaubleSlots && item instanceof IBauble && ((IBauble)item).canEquip(itemstack, thePlayer)) {
+            } else if(returnStack != null && slotIndex >= 4 + visibleBaubleSlots && item instanceof IBauble && ((IBauble)item).canEquip(returnStack, thePlayer)) {
                 for(int baubleSlot = 4; baubleSlot < 4 + visibleBaubleSlots; baubleSlot++) {
+                    if(returnStack == null) {
+                        break;
+                    }
                 	if(!((Slot)inventorySlots.get(baubleSlot)).getHasStack()) {
                 		String[] types;
                 		if(item instanceof IBaubleExpanded) {
-                			types = ((IBaubleExpanded)item).getBaubleTypes(itemstack);
+                			types = ((IBaubleExpanded)item).getBaubleTypes(returnStack);
                 		} else {
-                			types = new String[] {BaubleExpandedSlots.getTypeFromBaubleType(((IBauble)item).getBaubleType(itemstack))};
+                			types = new String[] {BaubleExpandedSlots.getTypeFromBaubleType(((IBauble)item).getBaubleType(returnStack))};
                 		}
                 		for(String type : types) {
-                			if(type.equals(BaubleExpandedSlots.getSlotType(baubleSlot - 4)) && !mergeItemStack(itemstack1, baubleSlot, baubleSlot + 1, false)) {
-                				return null;
+                			if(type.equals(BaubleExpandedSlots.getSlotType(baubleSlot - 4)) && !mergeItemStack(originalStack, baubleSlot, baubleSlot + 1, false)) {
+                                returnStack = null;
                 			}
                 		}
                 	}
                 }
-            } else if (slotIndex >= 4 + visibleBaubleSlots && slotIndex < 31 + visibleBaubleSlots) {
-                if (!mergeItemStack(itemstack1, 31 + visibleBaubleSlots, 40 + visibleBaubleSlots, false)) {
-                    return null;
+            } else if(returnStack != null && slotIndex >= 4 + visibleBaubleSlots && slotIndex < 31 + visibleBaubleSlots) {
+                if(!mergeItemStack(originalStack, 31 + visibleBaubleSlots, 40 + visibleBaubleSlots, false)) {
+                    returnStack = null;
                 }
-            } else if (slotIndex >= 31 + visibleBaubleSlots && slotIndex < 40 + visibleBaubleSlots) {
-                if (!mergeItemStack(itemstack1, 4 + visibleBaubleSlots, 31 + visibleBaubleSlots, false)) {
-                    return null;
+            } else if(returnStack != null && slotIndex >= 31 + visibleBaubleSlots && slotIndex < 40 + visibleBaubleSlots) {
+                if(!mergeItemStack(originalStack, 4 + visibleBaubleSlots, 31 + visibleBaubleSlots, false)) {
+                    returnStack = null;
                 }
-            } else if (!mergeItemStack(itemstack1, 4 + visibleBaubleSlots, 40 + visibleBaubleSlots, false, slot)) {
-                return null;
+            } else if(returnStack != null && !mergeItemStack(originalStack, 4 + visibleBaubleSlots, 40 + visibleBaubleSlots, false, slot)) {
+                returnStack = null;
             }
 
-            if (itemstack1.stackSize == 0) {
-                slot.putStack((ItemStack)null);
+            if(originalStack.stackSize <= 0) {
+                slot.putStack(null);
             } else {
                 slot.onSlotChanged();
             }
 
-            if (itemstack1.stackSize == itemstack.stackSize) {
-                return null;
+            if(returnStack != null && originalStack.stackSize == returnStack.stackSize) {
+                returnStack = null;
             }
 
-            slot.onPickupFromSlot(player, itemstack1);
+            slot.onPickupFromSlot(player, originalStack);
         }
 
-        return itemstack;
+        return returnStack;
     }
-    
+
     private void unequipBauble(ItemStack stack) {
 //        if (stack.getItem() instanceof IBauble) {
 //            ((IBauble)stack.getItem()).onUnequipped(stack, thePlayer);
