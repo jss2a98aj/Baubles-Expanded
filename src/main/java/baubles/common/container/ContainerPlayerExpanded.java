@@ -103,7 +103,7 @@ public class ContainerPlayerExpanded extends Container {
                 if(!mergeItemStack(originalStack, armorSlot, armorSlot + 1, false)) {
                     returnStack = null;
                 }
-            } else if(returnStack != null && slotIndex >= 4 + visibleBaubleSlots && item instanceof IBauble && ((IBauble)item).canEquip(returnStack, thePlayer)) {
+            } else if(slotIndex >= 4 + visibleBaubleSlots && item instanceof IBauble && ((IBauble) item).canEquip(returnStack, thePlayer)) {
                 for(int baubleSlot = 4; baubleSlot < 4 + visibleBaubleSlots; baubleSlot++) {
                     if(returnStack == null) {
                         break;
@@ -116,21 +116,21 @@ public class ContainerPlayerExpanded extends Container {
                 			types = new String[] {BaubleExpandedSlots.getTypeFromBaubleType(((IBauble)item).getBaubleType(returnStack))};
                 		}
                 		for(String type : types) {
-                			if(type.equals(BaubleExpandedSlots.getSlotType(baubleSlot - 4)) && !mergeItemStack(originalStack, baubleSlot, baubleSlot + 1, false)) {
+                			if((type.equals(BaubleExpandedSlots.universalType) || type.equals(BaubleExpandedSlots.getSlotType(baubleSlot - 4))) && !mergeItemStack(originalStack, baubleSlot, baubleSlot + 1, false)) {
                                 returnStack = null;
                 			}
                 		}
                 	}
                 }
-            } else if(returnStack != null && slotIndex >= 4 + visibleBaubleSlots && slotIndex < 31 + visibleBaubleSlots) {
+            } else if(slotIndex >= 4 + visibleBaubleSlots && slotIndex < 31 + visibleBaubleSlots) {
                 if(!mergeItemStack(originalStack, 31 + visibleBaubleSlots, 40 + visibleBaubleSlots, false)) {
                     returnStack = null;
                 }
-            } else if(returnStack != null && slotIndex >= 31 + visibleBaubleSlots && slotIndex < 40 + visibleBaubleSlots) {
+            } else if(slotIndex >= 31 + visibleBaubleSlots && slotIndex < 40 + visibleBaubleSlots) {
                 if(!mergeItemStack(originalStack, 4 + visibleBaubleSlots, 31 + visibleBaubleSlots, false)) {
                     returnStack = null;
                 }
-            } else if(returnStack != null && !mergeItemStack(originalStack, 4 + visibleBaubleSlots, 40 + visibleBaubleSlots, false, slot)) {
+            } else if(!mergeItemStack(originalStack, 4 + visibleBaubleSlots, 40 + visibleBaubleSlots, false, slot)) {
                 returnStack = null;
             }
 

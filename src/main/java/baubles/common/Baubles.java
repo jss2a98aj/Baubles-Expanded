@@ -2,6 +2,7 @@ package baubles.common;
 
 import java.io.File;
 
+import baubles.Tags;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -25,7 +26,7 @@ public class Baubles {
 
     public static final String MODID = "Baubles";
     public static final String MODNAME = "Baubles";
-    public static final String VERSION = "GRADLETOKEN_VERSION";
+    public static final String VERSION = Tags.VERSION;
 
     @SidedProxy(clientSide = "baubles.client.ClientProxy", serverSide = "baubles.common.CommonProxy")
     public static CommonProxy proxy;

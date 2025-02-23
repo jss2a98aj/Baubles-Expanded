@@ -210,7 +210,7 @@ public class InventoryBaubles implements IInventory {
 		}
 
 		for(String type : types) {
-			if(type.equals(slotType)) {
+			if(type.equals(BaubleExpandedSlots.universalType) || type.equals(slotType)) {
 				return true;
 			}
 		}

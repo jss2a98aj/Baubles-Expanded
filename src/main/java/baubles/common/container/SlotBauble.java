@@ -25,7 +25,7 @@ public class SlotBauble extends Slot {
 		slotType = BaubleExpandedSlots.getTypeFromBaubleType(legacyType);
 
     }
-    
+
     public SlotBauble(IInventory inventory, String type, int slot, int x, int y) {
         super(inventory, slot, x, y);
         if(type == null) {
@@ -49,18 +49,19 @@ public class SlotBauble extends Slot {
 			return false;
 		}
 
-		String[] types;
-		if(item instanceof IBaubleExpanded) {
-			types = ((IBaubleExpanded)item).getBaubleTypes(stack);
-		} else {
-			types = new String[] {BaubleExpandedSlots.getTypeFromBaubleType(((IBauble)item).getBaubleType(stack))};
-		}
+        String[] types;
+        if(item instanceof IBaubleExpanded) {
+            types = ((IBaubleExpanded)item).getBaubleTypes(stack);
+        } else {
+            BaubleType legacyType = ((IBauble)item).getBaubleType(stack);
+            types = new String[] {BaubleExpandedSlots.getTypeFromBaubleType(legacyType)};
+        }
 
-		for(String type : types) {
-			if(type.equals(slotType)) {
-				return true;
-			}
-		}
+        for(String type : types) {
+            if(type.equals(BaubleExpandedSlots.universalType) || type.equals(slotType)) {
+                return true;
+            }
+        }
 
 		return false;
     }
@@ -75,7 +76,7 @@ public class SlotBauble extends Slot {
     public int getSlotStackLimit() {
         return 1;
     }
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
     public IIcon getBackgroundIconIndex() {
