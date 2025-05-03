@@ -3,3 +3,12 @@
 plugins {
     id 'com.gtnewhorizons.gtnhconvention'
 }
+
+jar {
+    manifest {
+        attributes += [
+            "FMLCorePluginContainsFMLMod": true,
+            "FMLCorePlugin": "thaumcraft.codechicken.core.launch.DepLoader"
+        ]
+    }
+}
