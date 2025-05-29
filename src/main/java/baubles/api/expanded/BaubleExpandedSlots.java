@@ -110,7 +110,7 @@ public class BaubleExpandedSlots {
 			if(total > maximumOfType) {
 				total -= maximumOfType;
 				for(int i = 0; i < total; i++) {
-					for(int slotToCheck = slotsCurrentlyUsed(); slotToCheck > 0; slotToCheck--) {
+					for(int slotToCheck = slotsCurrentlyUsed(); slotToCheck >= 0; slotToCheck--) {
 						if(assignedSlots[slotToCheck].equals(type)) {
 							for(int slotToMove = slotToCheck + 1; slotToMove < slotLimit; slotToMove++) {
 								assignedSlots[slotToMove - 1] = assignedSlots[slotToMove];
@@ -156,7 +156,7 @@ public class BaubleExpandedSlots {
 	*/
 	public static boolean tryUnassignSlotOfType(String type) {
 		if(newSlotsRemaining < slotLimit && type != null && !type.equals(unknownType) && Loader.instance().getLoaderState() == LoaderState.PREINITIALIZATION) {
-			for(int slotToCheck = slotsCurrentlyUsed(); slotToCheck > 0; slotToCheck--) {
+			for(int slotToCheck = slotsCurrentlyUsed(); slotToCheck >= 0; slotToCheck--) {
 				if(assignedSlots[slotToCheck].equals(type)) {
 					for(int slotToMove = slotToCheck + 1; slotToMove < slotLimit; slotToMove++) {
 						assignedSlots[slotToMove - 1] = assignedSlots[slotToMove];
